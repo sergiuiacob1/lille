@@ -1,0 +1,6 @@
+mov src dest
+mov $15, %rax
+
+.global
+
+_start: prima instructiune care se executa
