@@ -21,18 +21,8 @@
 library ("EBImage")
 source ("rdfMoments.R")
 
-# Chargement d'une image d'un seul objet
-# nom <- "rdf-rectangle-diagonal-lisse.png";
-# image <- rdfReadGreyImage (nom)
-# if (interactive ()) {
-#   display (image, nom, method="raster", all=TRUE)
-# }
-
-# Calcul de la surface.
-# surface <- rdfSurface (image)
-
 # Tests to see the image orientation
-axis <- calculateMainImageAxis(nom, normalise=FALSE)
+axis <- calculateMainImageAxis("rdf-rectangle-diagonal-lisse.png", normalise=FALSE)
 print(axis)
 axis <- calculateMainImageAxis("rdf-rectangle-horizontal.png", normalise=FALSE)
 print(axis)
@@ -92,3 +82,5 @@ rdfMomentsInvariants("rdf-triangle-10-45deg.png")
 rdfMomentsInvariants("rdf-carre-6.png")
 rdfMomentsInvariants("rdf-carre-10.png")
 # Hu1 is different for forms of the same shape, but different scale
+
+

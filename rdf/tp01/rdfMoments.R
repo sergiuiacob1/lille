@@ -19,7 +19,7 @@
 
 # Chargement d'une image en niveaux de gris
 rdfReadGreyImage <- function (nom) {
-  image <- readImage (nom)
+  image <- readImage (paste('images/', nom, sep=''))
   if (length (dim (image)) == 2) {
     image
   } else {
@@ -73,7 +73,7 @@ mainInertionAxis <- function(im, normalise=TRUE){
 calculateMainImageAxis <- function(nom, normalise=TRUE){
   img <- rdfReadGreyImage(nom)
   if (interactive ()) {
-    display (image, nom, method="raster", all=TRUE)
+    display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
   axis <- mainInertionAxis(img, normalise)
 }
@@ -87,7 +87,7 @@ rdfMomentCentreNormalise <- function (img, p, q){
 calculateImageMoment <- function(nom, p, q, normalise=TRUE){
   img <- rdfReadGreyImage(nom)
   if (interactive ()) {
-    display (image, nom, method="raster", all=TRUE)
+    display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
   if (normalise == TRUE){
     f <- rdfMomentCentreNormalise
@@ -101,7 +101,7 @@ calculateImageMoment <- function(nom, p, q, normalise=TRUE){
 rdfMomentsInvariants <- function(nom){
   img <- rdfReadGreyImage(nom)
   if (interactive ()) {
-    display (image, nom, method="raster", all=TRUE)
+    display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
   
 }
@@ -110,7 +110,7 @@ rdfMomentsInvariants <- function(nom){
 rdfMomentsInvariants <- function(nom){
   img <- rdfReadGreyImage(nom)
   if (interactive ()) {
-    display (image, nom, method="raster", all=TRUE)
+    display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
   
   n02 <- rdfMomentCentreNormalise(img, 0, 2)
