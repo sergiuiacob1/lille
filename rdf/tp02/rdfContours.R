@@ -64,13 +64,11 @@ rdfAnnuleDescFourier <- function (desc, ratio){
     desc
   
   nb_delete <- length(desc) - length(desc) * ratio
-  step <- length(desc)/nb_delete
-  step <- floor(step)
-  for (i in seq(2, length(desc), by=step)){ 
-    desc[i] <- 0
-    i <- i + step
-  }
-  
+  middle <- length(desc)/2
+  start <- middle - nb_delete/2
+  end <- middle + nb_delete/2
+  desc[start:end] <- 0
   desc
+
 }
 

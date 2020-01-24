@@ -62,7 +62,7 @@ points(fourier[1], col="blue")
 nom <- "rdf-carre-80.txt"
 cont <- rdfChargeFichierContour(nom)
 fourier <- fft(cont)/length(cont)
-fourier <- rdfAnnuleDescFourier(fourier, 0.8)
+fourier <- rdfAnnuleDescFourier(fourier, 0.1)
 inversed <- fft(fourier, inverse=TRUE)
 plot (cont, main = nom, type = "o", asp = 1, col = "red",
         ylim = rev (range (Im (cont))))
