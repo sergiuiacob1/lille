@@ -62,7 +62,8 @@ def mainInertionAxis(img, normalise=True):
     u20 = f(img, 2, 0)
     u11 = f(img, 1, 1)
     u02 = f(img, 0, 2)
-    I = np.ndarray([u20, u11, u11, u02], shape=(2, 2), dtype='float')
+    I = np.ndarray(buffer=np.array(
+        [u20, u11, u11, u02]), shape=(2, 2), dtype='float')
     eigenValues, eigenVectors = np.linalg.eig(I)
     tenseur = np.diag(eigenValues)
     P = eigenVectors.T
@@ -117,4 +118,4 @@ def rdfMomentsInvariants(nom):
 
 
 if __name__ == '__main__':
-    print(calculateMainImageAxis("rdf-carre-6.png"))
+    print(rdfMomentCentre(rdfReadGreyImage("rdf-triangle-10-45deg.png"), 0, 0))
