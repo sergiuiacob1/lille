@@ -3,13 +3,16 @@
         .ascii "*"
     newline:
         .ascii "\n"
+    count:
+        .long 4
 
 .text
 
 .globl _start
 
 _start:
-    mov $5, %rcx
+    xor %rcx, %rcx
+    mov $count, %ecx
     jmp lin
 
 print_rsi:
@@ -50,4 +53,6 @@ col_fin:
     jmp lin
     
 fin:
-    
+    movl $0, %ebx
+    movl $1, %eax
+    int $0x80

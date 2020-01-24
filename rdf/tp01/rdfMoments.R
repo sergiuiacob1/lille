@@ -116,16 +116,17 @@ rdfMomentsInvariants <- function(nom){
   n02 <- rdfMomentCentreNormalise(img, 0, 2)
   n03 <- rdfMomentCentreNormalise(img, 0, 3)
   n11 <- rdfMomentCentreNormalise(img, 1, 1)
-  n12 <- rdfMomentCentreNormalise(img, 3, 0)
+  n12 <- rdfMomentCentreNormalise(img, 1, 2)
   n20 <- rdfMomentCentreNormalise(img, 2, 0)
   n21 <- rdfMomentCentreNormalise(img, 2, 1)
   n30 <- rdfMomentCentreNormalise(img, 3, 0)
   
   hu1 <- n20 + n02
   hu2 <- (n20 - n02)**2 + (2*n11)**2
-  hu3 <- (n30 - 3*n12) + (3*n21 - n03)**2
+  hu3 <- (n30 - 3*n12)**2 + (3*n21 - n03)**2
   hu4 <- (n30 + n12)**2 + (n21 + n03)**2
-  hu5 <- (n30 - 3*n12)*(n30 + n12)*((n30 + n12)**2 - 3*(n21 + n03)**2) + (3*n21-n03)*(n21+n03)*(3*(n30 + n12)**2 - (n21 + n03)**2)
+  hu5 <- (n30 - 3*n12)*(n30 + n12)*((n30 + n12)**2 - 3*(n21 + n03) **
+                                     2) + (3*n21-n03)*(n21+n03)*(3*(n30 + n12)**2 - (n21 + n03)**2)
   
   c(hu1, hu2, hu3, hu4, hu5)
 }
