@@ -12,7 +12,7 @@
 
 _start:
     xor %rcx, %rcx
-    mov $count, %ecx
+    mov $4, %ecx
     jmp lin
 
 print_rsi:
@@ -26,7 +26,7 @@ lin:
     dec %rcx
     cmp $0, %rcx
     jl fin
-    mov $5, %rdx
+    mov $10, %rdx
 
 col:
     dec %rdx
