@@ -52,12 +52,19 @@ rdfMomentCentre <- function (im, p, q) {
   as.numeric (rbind (x) %*% im %*% cbind (y))
 }
 
+rdfInertiaMatrix <- function(nom){
+  img <- rdfReadGreyImage(nom)
+  u20 <- rdfMomentCentre(img, 2, 0)
+  u11 <- rdfMomentCentre(img, 1, 1)
+  u02 <- rdfMomentCentre(img, 0, 2)
+  I <- matrix(c(u20, u11, u11, u02), nrow=2, ncol=2)
+}
+
 mainInertionAxis <- function(im, normalise=TRUE){
   if (normalise == TRUE)
     f <- rdfMomentCentreNormalise
   else
     f <- rdfMomentCentre
-  print (f)
   u20 <- f(im, 2, 0)
   u11 <- f(im, 1, 1)
   u02 <- f(im, 0, 2)

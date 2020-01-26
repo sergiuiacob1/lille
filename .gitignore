@@ -3,3 +3,10 @@
 .RData
 .Ruserdata
 __latexindent_temp.tex
+# Latex stuff
+main.aux
+main.fdb_latexmk
+main.fls
+main.log
+main.out
+main.synctex.gz

@@ -21,66 +21,74 @@
 library ("EBImage")
 source ("rdfMoments.R")
 
-# Tests to see the image orientation
-axis <- calculateMainImageAxis("rdf-rectangle-diagonal.png", normalise=FALSE)
-print(axis)
-axis <- calculateMainImageAxis("rdf-rectangle-horizontal.png", normalise=FALSE)
-print(axis)
-axis <- calculateMainImageAxis("rdf-rectangle-vertical.png", normalise=FALSE)
-print(axis)
-# pour les deux carres ce dessous, l´inertion est la meme
-axis <- calculateMainImageAxis("rdf-carre-6.png", normalise=FALSE)
-print(axis)
-axis <- calculateMainImageAxis("rdf-carre-10.png", normalise=FALSE)
-print(axis)
-# pour ces deux carres, l´orientation est un peu different
-# ca veux dire que les vecteurs propres sont different aussi
-axis <- calculateMainImageAxis("rdf-carre-10-30deg.png", normalise=FALSE)
-print(axis)
-axis <- calculateMainImageAxis("rdf-carre-10-45deg.png", normalise=FALSE)
-print(axis)
+testInertiaMatrix <- function(){
+    m <- rdfInertiaMatrix("rdf-rectangle-horizontal.png")
+    print (m)
+    m <- rdfInertiaMatrix("rdf-rectangle-vertical.png")
+    m <- rdfInertiaMatrix("rdf-rectangle-diagonal.png")
+    m <- rdfInertiaMatrix("rdf-rectangle-diagonal-lisse.png")
+}
 
-# Normalised moment
-# If we normalise the moment, the squares have the same moment
-mom <- calculateImageMoment("rdf-carre-6.png", 0, 0, normalise=FALSE)
-print (mom)
-mom <- calculateImageMoment("rdf-carre-6.png", 0, 0, normalise=TRUE)
-print (mom)
-mom <- calculateImageMoment("rdf-carre-10.png", 0, 0, normalise=FALSE)
-print (mom)
-mom <- calculateImageMoment("rdf-carre-10.png", 0, 0, normalise=TRUE)
-print (mom)
+# # Tests to see the image orientation
+# axis <- calculateMainImageAxis("rdf-rectangle-diagonal.png", normalise=FALSE)
+# print(axis)
+# axis <- calculateMainImageAxis("rdf-rectangle-horizontal.png", normalise=FALSE)
+# print(axis)
+# axis <- calculateMainImageAxis("rdf-rectangle-vertical.png", normalise=FALSE)
+# print(axis)
+# # pour les deux carres ce dessous, l´inertion est la meme
+# axis <- calculateMainImageAxis("rdf-carre-6.png", normalise=FALSE)
+# print(axis)
+# axis <- calculateMainImageAxis("rdf-carre-10.png", normalise=FALSE)
+# print(axis)
+# # pour ces deux carres, l´orientation est un peu different
+# # ca veux dire que les vecteurs propres sont different aussi
+# axis <- calculateMainImageAxis("rdf-carre-10-30deg.png", normalise=FALSE)
+# print(axis)
+# axis <- calculateMainImageAxis("rdf-carre-10-45deg.png", normalise=FALSE)
+# print(axis)
 
-mom <- calculateImageMoment("rdf-carre-10-30deg.png", 0, 0, normalise=FALSE)
-print (mom)
-mom <- calculateImageMoment("rdf-carre-10-30deg.png", 0, 0, normalise=TRUE)
-print (mom)
+# # Normalised moment
+# # If we normalise the moment, the squares have the same moment
+# mom <- calculateImageMoment("rdf-carre-6.png", 0, 0, normalise=FALSE)
+# print (mom)
+# mom <- calculateImageMoment("rdf-carre-6.png", 0, 0, normalise=TRUE)
+# print (mom)
+# mom <- calculateImageMoment("rdf-carre-10.png", 0, 0, normalise=FALSE)
+# print (mom)
+# mom <- calculateImageMoment("rdf-carre-10.png", 0, 0, normalise=TRUE)
+# print (mom)
 
-# Let's see the inertion with the normalised moment
-axis <- calculateMainImageAxis("rdf-triangle-10.png", normalise=FALSE)
-print(axis)
-axis <- calculateMainImageAxis("rdf-triangle-10.png", normalise=TRUE)
-print(axis)
+# mom <- calculateImageMoment("rdf-carre-10-30deg.png", 0, 0, normalise=FALSE)
+# print (mom)
+# mom <- calculateImageMoment("rdf-carre-10-30deg.png", 0, 0, normalise=TRUE)
+# print (mom)
 
-axis <- calculateMainImageAxis("rdf-triangle-10-45deg.png", normalise=FALSE)
-print(axis)
-axis <- calculateMainImageAxis("rdf-triangle-10-45deg.png", normalise=TRUE)
-print(axis)
+# # Let's see the inertion with the normalised moment
+# axis <- calculateMainImageAxis("rdf-triangle-10.png", normalise=FALSE)
+# print(axis)
+# axis <- calculateMainImageAxis("rdf-triangle-10.png", normalise=TRUE)
+# print(axis)
 
-# For the same figure, the eigen vectors stay the same, even if the normalise the moment
-# So the moment is useful for scaling and it does not affect the rotation
+# axis <- calculateMainImageAxis("rdf-triangle-10-45deg.png", normalise=FALSE)
+# print(axis)
+# axis <- calculateMainImageAxis("rdf-triangle-10-45deg.png", normalise=TRUE)
+# print(axis)
 
-# Hu
-rdfMomentsInvariants("rdf-chiffre-0.png")
-rdfMomentsInvariants("rdf-chiffre-1.png")
-rdfMomentsInvariants("rdf-chiffre-7.png")
-# values are different for digits
-rdfMomentsInvariants("rdf-triangle-10.png")
-rdfMomentsInvariants("rdf-triangle-10-45deg.png")
-# Hu invariants are also different for rotated shapes
+# # For the same figure, the eigen vectors stay the same, even if the normalise the moment
+# # So the moment is useful for scaling and it does not affect the rotation
 
-rdfMomentsInvariants("rdf-carre-6.png")
-rdfMomentsInvariants("rdf-carre-10.png")
-# Hu1 is different for forms of the same shape, but different scale
+# # Hu
+# rdfMomentsInvariants("rdf-chiffre-0.png")
+# rdfMomentsInvariants("rdf-chiffre-1.png")
+# rdfMomentsInvariants("rdf-chiffre-7.png")
+# # values are different for digits
+# rdfMomentsInvariants("rdf-triangle-10.png")
+# rdfMomentsInvariants("rdf-triangle-10-45deg.png")
+# # Hu invariants are also different for rotated shapes
+
+# rdfMomentsInvariants("rdf-carre-6.png")
+# rdfMomentsInvariants("rdf-carre-10.png")
+# # Hu1 is different for forms of the same shape, but different scale
 
 
