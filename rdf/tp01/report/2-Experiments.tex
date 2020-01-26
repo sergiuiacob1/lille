@@ -5,8 +5,9 @@ The following code presented was written using \emph{Python 3.7}. The images fro
 \section{Loading data}
 \begin{figure}
     \centering
-    \includegraphics[scale=2.0]{rdf-carre-10.png}
     \includegraphics[scale=2.0]{rdf-carre-6.png}
+    \includegraphics[scale=2.0]{rdf-carre-10.png}
+    \includegraphics[scale=2.0]{rdf-carre-10-30deg.png}
     \includegraphics[scale=2.0]{rdf-triangle-10-15deg.png}
     \includegraphics[scale=2.0]{rdf-triangle-10-45deg.png}
     \includegraphics[scale=2.0]{rdf-triangle-10-60deg.png}
@@ -106,7 +107,8 @@ Our first experiment is calculating the main axis for the 3 rectangles, in the f
 \end{figure}
 
 \paragraph{}
-Let us now analyse the 2 squares which only differ in scale. From the results, we can see that their main axis of interia is the same. Therefore, this is invariant to the scale of the shape.
+Let us now analyse the square images. From the results, we can see that the main axis of inertia for the squares that only differ in size is the same.
+For the square that is rotated, we get different results. Therefore, calculating the main axis of inertia is invariant to the scale of the shape.
 \begin{figure}[H]
     \centering
     \includegraphics{main_axis_squares.png}

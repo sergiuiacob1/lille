@@ -57,6 +57,7 @@ mainInertionAxis <- function(im, normalise=TRUE){
     f <- rdfMomentCentreNormalise
   else
     f <- rdfMomentCentre
+  print (f)
   u20 <- f(im, 2, 0)
   u11 <- f(im, 1, 1)
   u02 <- f(im, 0, 2)
@@ -75,6 +76,7 @@ calculateMainImageAxis <- function(nom, normalise=TRUE){
   if (interactive ()) {
     display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
+  print (normalise)
   axis <- mainInertionAxis(img, normalise)
 }
 
