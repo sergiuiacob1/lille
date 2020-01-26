@@ -1,15 +1,9 @@
 [0] Config.pm:304> INFO - This is Biber 2.12
 [0] Config.pm:307> INFO - Logfile is 'main.blg'
-[50] biber-darwin:315> INFO - === Tue Jan 21, 2020, 08:53:32
-[81] Biber.pm:371> INFO - Reading 'main.bcf'
-[199] Biber.pm:889> INFO - Found 1 citekeys in bib section 0
-[215] Biber.pm:4093> INFO - Processing section 0
-[230] Biber.pm:4254> INFO - Looking for bibtex format file 'bibliography.bib' for section 0
-[233] bibtex.pm:1523> INFO - LaTeX decoding ...
-[238] bibtex.pm:1340> INFO - Found BibTeX data source 'bibliography.bib'
-[253] UCollate.pm:68> INFO - Overriding locale 'en-GB' defaults 'variable = shifted' with 'variable = non-ignorable'
-[254] UCollate.pm:68> INFO - Overriding locale 'en-GB' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[254] Biber.pm:3921> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-GB'
-[254] Biber.pm:3927> INFO - No sort tailoring available for locale 'en-GB'
-[262] bbl.pm:636> INFO - Writing 'main.bbl' with encoding 'UTF-8'
-[263] bbl.pm:739> INFO - Output to main.bbl
+[51] biber-darwin:315> INFO - === Sun Jan 26, 2020, 14:28:29
+[80] Biber.pm:371> INFO - Reading 'main.bcf'
+[199] Biber.pm:889> INFO - Found 0 citekeys in bib section 0
+[207] Utils.pm:193> WARN - The file 'main.bcf' does not contain any citations!
+[217] bbl.pm:636> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[217] bbl.pm:739> INFO - Output to main.bbl
+[218] Biber.pm:110> INFO - WARNINGS: 1
