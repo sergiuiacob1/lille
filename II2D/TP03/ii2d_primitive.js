@@ -27,6 +27,10 @@ class Vector {
     return u.x * v.x + u.y * v.y;
   }
 
+  static scalarProduct(v, number) {
+    return new Vector(v.x * number, v.y * number);
+  }
+
   length() {
     return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
   }
@@ -35,6 +39,12 @@ class Vector {
   add(u) {
     this.x += u.x;
     this.y += u.y;
+    return this;
+  }
+
+  divide(scalar) {
+    this.x /= scalar;
+    this.y /= scalar;
     return this;
   }
 
@@ -59,7 +69,6 @@ class Vector {
     this.x = randInt(p1.x, p2.x);
     this.y = randInt(p1.y, p2.y);
   }
-
 };
 
 

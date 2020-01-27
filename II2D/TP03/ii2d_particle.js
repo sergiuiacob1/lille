@@ -22,6 +22,7 @@ class GeneratorBox {
     p.color.b = randInt(0, 255);
     p.initialTimeToLive = randInt(this.minTimeToLive, this.maxTimeToLive);
     p.timeToLive = p.initialTimeToLive;
+    p.velocity.setRandInt(new Vector(-100, -200), new Vector(100, 100));
   }
 
   distance(mouse) {
@@ -51,11 +52,32 @@ class Particle {
     this.isAlive = false;
     this.initialTimeToLive = 0;
     this.timeToLive = 0;
+    this.velocity = new Vector(0, 0);
+    this.mass = 1;
+    this.force = Vector.scalarProduct(new Vector(0, 9.81), this.mass);
+    this.acceleration = Vector.scalarProduct(this.force, 100).divide(this.mass);
+    this.oldVelocity = null;
+    this.oldPosition = null;
   }
 
   draw() {
     ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.timeToLive / this.initialTimeToLive})`;
     ctx.fillRect(this.position.x, this.position.y, 5, 5);
+  }
+
+  motion(deltaTime, forces) {
+    this.oldPosition = this.position.clone();
+    this.oldVelocity = this.velocity.clone();
+
+    var dp = Vector.scalarProduct(this.velocity, deltaTime);
+    this.position.add(dp);
+
+    // update velocity 
+    this.velocity.add(Vector.scalarProduct(this.acceleration, deltaTime));
+
+    forces.forEach(force => {
+      this.position.add(force);
+    });
   }
 
 };
@@ -71,13 +93,21 @@ class Particle {
 class ParticleManager {
   constructor() {
     this.all = []
-    this.nbAliveMax = 300;
+    this.nbAliveMax = 1000;
     this.generatorList = [];
+    this.repulseurs = [];
     this.selected = null;
 
     for (var i = 0; i < this.nbAliveMax; ++i) {
       this.all.push(new Particle());
     }
+  }
+
+  addGenerators(generators) {
+    generators.forEach(generator => {
+      this.generatorList.push(generator);
+      this.repulseurs.push(new Vector(0, 0));
+    });
   }
 
   select(mouse) {
@@ -92,27 +122,25 @@ class ParticleManager {
     }
   }
 
+  motion(deltaTime) {
+    var start;
+    for (var i = 0; i < this.generatorList.length; ++i) {
+      start = i * (this.all.length / this.generatorList.length);
+      for (var j = start; j < start + this.generatorList[i].nbBirth; ++j)
+        this.all[j].motion(deltaTime, [this.repulseurs[i]]);
+    }
+  }
+
+  updateRepulseurs(mouse) {
+    for (var i = 0; i < this.generatorList.length; ++i) {
+      var centerX = (this.generatorList[i].min.x + this.generatorList[i].max.x) / 2;
+      var centerY = (this.generatorList[i].min.y + this.generatorList[i].max.y) / 2;
+      var center = new Vector(centerX, centerY);
+      this.repulseurs[i] = Vector.subtract(mouse, center).divide(100);
+    }
+  }
+
   updateGenerator(generator, start, end) {
-    // slow version:
-    // // kill
-    // for (var i = start; i < end; ++i)
-    //   if (this.all[i].timeToLive <= 0)
-    //     this.all[i].isAlive = false;
-
-    // //give birth
-    // var count = 0;
-    // for (var i = start; i < end; ++i)
-    //   if (this.all[i].isAlive == false) {
-    //     this.all[i].isAlive = true;
-    //     generator.initParticle(this.all[i]);
-    //     ++count;
-    //     if (count > Math.floor(generator.birthRate))
-    //       break;
-    //   }
-    // generator.nbBirth += count;
-    // generator.nbBirth = Math.min(generator.nbBirth, end - start);
-    // return;
-
     // Arrêter les particules
     for (var i = start; i < start + generator.nbBirth; ++i) {
       if (this.all[i].timeToLive <= 0) {
