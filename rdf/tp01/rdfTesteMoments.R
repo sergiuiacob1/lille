@@ -81,7 +81,46 @@ testMainInertiaMoments <- function(){
     }
 }
 
-testMainInertiaMoments()
+# testMainInertiaMoments()
+
+testMomentsInvariants <- function(){
+    allVals <- c()
+    noms <- c("rdf-carre-6.png", "rdf-carre-10.png", "rdf-carre-10-30deg.png", "rdf-carre-10-45deg.png",
+        "rdf-rectangle-horizontal.png","rdf-rectangle-vertical.png","rdf-rectangle-diagonal.png","rdf-rectangle-diagonal-lisse.png")
+    noms <- c(noms, "rdf-triangle-10.png", "rdf-triangle-10-15deg.png", "rdf-triangle-10-45deg.png", "rdf-triangle-10-60deg.png")
+    goodNoms <- c()
+    for (nom in noms){
+        vals <- rdfMomentsInvariants(nom)
+        vals <- round (vals, digits=4)
+        goodNoms <- c(goodNoms, strsplit(strsplit(nom, "rdf-", fixed=TRUE)[[1]], ".png", fixed=TRUE)[[2]])
+        allVals <- rbind(allVals, vals)
+    }
+    allVals <- data.frame(allVals, row.names = goodNoms, check.rows = FALSE, check.names = TRUE, stringsAsFactors = default.stringsAsFactors())
+    names(allVals) <- c("hu1", "hu2", "hu3", "hu4", "hu5")
+    print (allVals)
+}
+
+
+testMomentsInvariantsForDigits <- function(){
+    allVals <- c()
+    noms <- c("rdf-chiffre-0.png", "rdf-chiffre-1.png", "rdf-chiffre-2.png", "rdf-chiffre-3.png", "rdf-chiffre-4.png", "rdf-chiffre-5.png", 
+    "rdf-chiffre-6.png", "rdf-chiffre-7.png", "rdf-chiffre-8.png", "rdf-chiffre-9.png")
+    goodNoms <- c()
+    for (nom in noms){
+        vals <- rdfMomentsInvariants(nom)
+        vals <- round (vals, digits=4)
+        goodNoms <- c(goodNoms, strsplit(strsplit(nom, "rdf-", fixed=TRUE)[[1]], ".png", fixed=TRUE)[[2]])
+        allVals <- rbind(allVals, vals)
+    }
+    allVals <- data.frame(allVals, row.names = goodNoms, check.rows = FALSE, check.names = TRUE, stringsAsFactors = default.stringsAsFactors())
+    names(allVals) <- c("hu1", "hu2", "hu3", "hu4", "hu5")
+    print (allVals)
+}
+
+
+# testMomentsInvariants()
+testMomentsInvariantsForDigits()
+
 
 
 # # Tests to see the image orientation

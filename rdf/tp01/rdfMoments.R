@@ -112,15 +112,6 @@ rdfMomentsInvariants <- function(nom){
     display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
   
-}
-
-
-rdfMomentsInvariants <- function(nom){
-  img <- rdfReadGreyImage(nom)
-  if (interactive ()) {
-    display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
-  }
-  
   n02 <- rdfMomentCentreNormalise(img, 0, 2)
   n03 <- rdfMomentCentreNormalise(img, 0, 3)
   n11 <- rdfMomentCentreNormalise(img, 1, 1)
