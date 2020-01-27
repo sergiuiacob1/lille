@@ -14,14 +14,38 @@ class Circle {
 
     distance(point) {
         var centerDistance = Vector.distance(this.center, point);
-        if (centerDistance < this.radius)
-            //L'interieur du cercle
+        if (centerDistance <= this.radius)
+            // L'interieur du cercle
             return this.radius - centerDistance;
         return centerDistance - this.radius;
     }
 
+    pointIsInside(point) {
+        var centerDistance = Vector.distance(this.center, point);
+        return centerDistance <= this.radius;
+    }
+
     move(m) {
         this.center.add(m);
+    }
+
+    intersect(p1, p2) {
+        var isIntersect;
+        var normal;
+        var position;
+        var p1IsInside = this.pointIsInside(p1);
+        var p2IsInside = this.pointIsInside(p2);
+
+        if ((p1IsInside && !p2IsInside) || (!p1IsInside && p2IsInside))
+            isIntersect = true;
+        else
+            isIntersect = false;
+
+        return {
+            isIntersect: isIntersect,
+            normal: new Vector(1, 0),
+            position: new Vector(1, 1)
+        };
     }
 }
 
@@ -43,6 +67,35 @@ class Segment {
                 this.a.add(m);
                 this.b.add(m);
             }
+    }
+
+    intersect(p1, p2) {
+        var isIntersect;
+        var normal;
+        var position;
+
+        var ab = Vector.subtract(this.b, this.a);
+        var n = new Vector(-ab.y, ab.x);
+        var firstAngle = Vector.dot(Vector.subtract(p1, this.a), n);
+        var secondAngle = Vector.dot(Vector.subtract(p2, this.a), n);
+        if (firstAngle * secondAngle < 0) {
+            var ap2 = Vector.subtract(p2, this.a);
+            var ab = Vector.subtract(this.b, this.a);
+            var bp2 = Vector.subtract(p2, this.b);
+            var ba = Vector.subtract(this.a, this.b);
+            if (!(Vector.dot(ap2, ab) < 0 || Vector.dot(bp2, ba) < 0))
+                isIntersect = true;
+            else
+                isIntersect = false;
+        }
+        else
+            isIntersect = false;
+
+        return {
+            isIntersect: isIntersect,
+            normal: new Vector(1, 0),
+            position: new Vector(1, 1)
+        };
     }
 
     draw() {

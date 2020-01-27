@@ -4,7 +4,7 @@ function handleMouseDown(event) {
     var mouse = new Vector(mouseX, mouseY);
     engine.particleManager.select(mouse);
     engine.obstacleManager.select(mouse);
-    if (engine.obstacleManager.selected != null){
+    if (engine.obstacleManager.selected != null) {
         engine.obstacleManager.selected.color = "green";
         engine.particleManager.selected = null;
     }
@@ -20,6 +20,8 @@ function handleMouseUp(event) {
 }
 
 function handleMouseMove(event) {
+    // engine.updateRepulseur(new Vector(event.offsetX, event.offsetY));
+
     if (mouseIsPressed == false)
         return;
     var mouseX = event.movementX;
