@@ -52,6 +52,14 @@ rdfMomentCentre <- function (im, p, q) {
   as.numeric (rbind (x) %*% im %*% cbind (y))
 }
 
+rdfInertiaMatrix <- function(nom){
+  img <- rdfReadGreyImage(nom)
+  u20 <- rdfMomentCentre(img, 2, 0)
+  u11 <- rdfMomentCentre(img, 1, 1)
+  u02 <- rdfMomentCentre(img, 0, 2)
+  I <- matrix(c(u20, u11, u11, u02), nrow=2, ncol=2)
+}
+
 mainInertionAxis <- function(im, normalise=TRUE){
   if (normalise == TRUE)
     f <- rdfMomentCentreNormalise
@@ -75,6 +83,7 @@ calculateMainImageAxis <- function(nom, normalise=TRUE){
   if (interactive ()) {
     display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
+  print (normalise)
   axis <- mainInertionAxis(img, normalise)
 }
 
@@ -82,6 +91,7 @@ rdfMomentCentreNormalise <- function (img, p, q){
   upq = rdfMomentCentre(img, p, q)
   u00 = rdfMomentCentre(img, 0, 0)
   normalised = upq / (u00 ** (1 + (p + q)/2))
+  normalised
 }
 
 calculateImageMoment <- function(nom, p, q, normalise=TRUE){

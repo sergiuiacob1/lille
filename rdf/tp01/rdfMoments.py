@@ -41,8 +41,7 @@ def rdfSurface(img):
 def rdfMoment(img, p, q):
     x = [x ** p for x in range(1, img.shape[0] + 1)]
     y = [y ** q for y in range(1, img.shape[1] + 1)]
-    x, y = np.array(x), np.array(y)
-    return np.dot(np.dot(x.T, img), y)
+    return np.dot(np.dot(x, img), y)
 
 
 # Calcul d'un moment centre
