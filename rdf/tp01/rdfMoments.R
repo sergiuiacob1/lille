@@ -91,6 +91,7 @@ rdfMomentCentreNormalise <- function (img, p, q){
   upq = rdfMomentCentre(img, p, q)
   u00 = rdfMomentCentre(img, 0, 0)
   normalised = upq / (u00 ** (1 + (p + q)/2))
+  normalised
 }
 
 calculateImageMoment <- function(nom, p, q, normalise=TRUE){

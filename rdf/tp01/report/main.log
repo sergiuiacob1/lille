@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.20)  26 JAN 2020 19:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.20)  27 JAN 2020 09:53
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1445,7 +1445,7 @@ Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<images/universite_de_lille.png, id=59, 1027.84pt x 493.845pt>
+<images/universite_de_lille.png, id=67, 1027.84pt x 493.845pt>
 File: images/universite_de_lille.png Graphic file (type png)
 <use images/universite_de_lille.png>
 Package pdftex.def Info: images/universite_de_lille.png  used on input line 38.
@@ -1521,52 +1521,52 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `phv' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-<./../images/rdf-carre-6.png, id=81, 32.12pt x 24.09pt>
+<./../images/rdf-carre-6.png, id=89, 32.12pt x 24.09pt>
 File: ./../images/rdf-carre-6.png Graphic file (type png)
 <use ./../images/rdf-carre-6.png>
 Package pdftex.def Info: ./../images/rdf-carre-6.png  used on input line 22.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-carre-10.png, id=82, 32.12pt x 24.09pt>
+<./../images/rdf-carre-10.png, id=90, 32.12pt x 24.09pt>
 File: ./../images/rdf-carre-10.png Graphic file (type png)
 <use ./../images/rdf-carre-10.png>
 Package pdftex.def Info: ./../images/rdf-carre-10.png  used on input line 23.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-carre-10-30deg.png, id=83, 32.12pt x 24.09pt>
+<./../images/rdf-carre-10-30deg.png, id=91, 32.12pt x 24.09pt>
 File: ./../images/rdf-carre-10-30deg.png Graphic file (type png)
 <use ./../images/rdf-carre-10-30deg.png>
 Package pdftex.def Info: ./../images/rdf-carre-10-30deg.png  used on input line 24.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-triangle-10-15deg.png, id=84, 32.12pt x 24.09pt>
+<./../images/rdf-triangle-10-15deg.png, id=92, 32.12pt x 24.09pt>
 File: ./../images/rdf-triangle-10-15deg.png Graphic file (type png)
 <use ./../images/rdf-triangle-10-15deg.png>
 Package pdftex.def Info: ./../images/rdf-triangle-10-15deg.png  used on input line 25.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-triangle-10-45deg.png, id=85, 32.12pt x 24.09pt>
+<./../images/rdf-triangle-10-45deg.png, id=93, 32.12pt x 24.09pt>
 File: ./../images/rdf-triangle-10-45deg.png Graphic file (type png)
 <use ./../images/rdf-triangle-10-45deg.png>
 Package pdftex.def Info: ./../images/rdf-triangle-10-45deg.png  used on input line 26.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-triangle-10-60deg.png, id=86, 32.12pt x 24.09pt>
+<./../images/rdf-triangle-10-60deg.png, id=94, 32.12pt x 24.09pt>
 File: ./../images/rdf-triangle-10-60deg.png Graphic file (type png)
 <use ./../images/rdf-triangle-10-60deg.png>
 Package pdftex.def Info: ./../images/rdf-triangle-10-60deg.png  used on input line 27.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-triangle-20.png, id=87, 32.12pt x 24.09pt>
+<./../images/rdf-triangle-20.png, id=95, 32.12pt x 24.09pt>
 File: ./../images/rdf-triangle-20.png Graphic file (type png)
 <use ./../images/rdf-triangle-20.png>
 Package pdftex.def Info: ./../images/rdf-triangle-20.png  used on input line 28.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-rectangle-horizontal.png, id=88, 32.12pt x 24.09pt>
+<./../images/rdf-rectangle-horizontal.png, id=96, 32.12pt x 24.09pt>
 File: ./../images/rdf-rectangle-horizontal.png Graphic file (type png)
 <use ./../images/rdf-rectangle-horizontal.png>
 Package pdftex.def Info: ./../images/rdf-rectangle-horizontal.png  used on input line 29.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-rectangle-vertical.png, id=89, 32.12pt x 24.09pt>
+<./../images/rdf-rectangle-vertical.png, id=97, 32.12pt x 24.09pt>
 File: ./../images/rdf-rectangle-vertical.png Graphic file (type png)
 <use ./../images/rdf-rectangle-vertical.png>
 Package pdftex.def Info: ./../images/rdf-rectangle-vertical.png  used on input line 30.
 (pdftex.def)             Requested size: 64.2398pt x 48.17984pt.
-<./../images/rdf-rectangle-diagonal.png, id=90, 32.12pt x 24.09pt>
+<./../images/rdf-rectangle-diagonal.png, id=98, 32.12pt x 24.09pt>
 File: ./../images/rdf-rectangle-diagonal.png Graphic file (type png)
 <use ./../images/rdf-rectangle-diagonal.png>
 Package pdftex.def Info: ./../images/rdf-rectangle-diagonal.png  used on input line 31.
@@ -1581,29 +1581,51 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/sc' in size <12> not available
  [3
 
 ]
-<./images/rectangles-moments.png, id=141, 281.05pt x 275.0275pt>
+<./images/rectangles-moments.png, id=149, 281.05pt x 275.0275pt>
 File: ./images/rectangles-moments.png Graphic file (type png)
 <use ./images/rectangles-moments.png>
 Package pdftex.def Info: ./images/rectangles-moments.png  used on input line 95.
 (pdftex.def)             Requested size: 145.38348pt x 142.26378pt.
-<./images/squares-moments.png, id=142, 247.92625pt x 277.035pt>
+<./images/squares-moments.png, id=150, 247.92625pt x 277.035pt>
 File: ./images/squares-moments.png Graphic file (type png)
 <use ./images/squares-moments.png>
 Package pdftex.def Info: ./images/squares-moments.png  used on input line 96.
 (pdftex.def)             Requested size: 127.31459pt x 142.26378pt.
+File: ./images/squares-moments.png Graphic file (type png)
+<use ./images/squares-moments.png>
+Package pdftex.def Info: ./images/squares-moments.png  used on input line 132.
+(pdftex.def)             Requested size: 127.31459pt x 142.26378pt.
+<./images/rectangles_normalised_moments.png, id=151, 342.27875pt x 142.5325pt>
+File: ./images/rectangles_normalised_moments.png Graphic file (type png)
+<use ./images/rectangles_normalised_moments.png>
+Package pdftex.def Info: ./images/rectangles_normalised_moments.png  used on input line 133.
+(pdftex.def)             Requested size: 341.63548pt x 142.26378pt.
+<./images/triangles_normalised_moments.png, id=152, 358.33875pt x 137.51375pt>
+File: ./images/triangles_normalised_moments.png Graphic file (type png)
+<use ./images/triangles_normalised_moments.png>
+Package pdftex.def Info: ./images/triangles_normalised_moments.png  used on input line 134.
+(pdftex.def)             Requested size: 370.74977pt x 142.26378pt.
+
+Overfull \hbox (15.78647pt too wide) in paragraph at lines 132--135
+[][] []
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 ) [4
 
- <./images/rectangles-moments.png> <./images/squares-moments.png>]
+ <./images/rectangles-moments.png> <./images/squares-moments.png>] [5 <./images/rectangles_normalised_moments.png> <./images/triangles_normalised_moments.png>]
 Chapter 3.
-(/Users/sergiuiacob/work/lille/rdf/tp01/report/3-Results.tex) [5
+(/Users/sergiuiacob/work/lille/rdf/tp01/report/3-Results.tex) [6
 
 ]
 Chapter 4.
-(/Users/sergiuiacob/work/lille/rdf/tp01/report/4-Discussion.tex) [6
+(/Users/sergiuiacob/work/lille/rdf/tp01/report/4-Discussion.tex) [7
 
 ]
 Chapter 5.
-(/Users/sergiuiacob/work/lille/rdf/tp01/report/5-Conclusion.tex) [7
+(/Users/sergiuiacob/work/lille/rdf/tp01/report/5-Conclusion.tex) [8
 
 ]
 
@@ -1615,24 +1637,24 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 86.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 86.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 86.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 3FD450130A0F1A5114AAB8A1CB7F1049;716.
+(rerunfilecheck)             Checksum: E5F676A6BEC80D03BC61321363AD8F6C;870.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 42790 strings out of 492616
- 788679 string characters out of 6129481
- 1452626 words of memory out of 5000000
- 45897 multiletter control sequences out of 15000+600000
- 629032 words of font info for 142 fonts, out of 8000000 for 9000
+ 42822 strings out of 492616
+ 789405 string characters out of 6129481
+ 1452627 words of memory out of 5000000
+ 45913 multiletter control sequences out of 15000+600000
+ 629148 words of font info for 143 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  74i,8n,65p,886b,2191s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /Users/sergiuiacob/work/lille/rdf/tp01/report/main.pdf (8 pages, 226645 bytes).
+{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on /Users/sergiuiacob/work/lille/rdf/tp01/report/main.pdf (9 pages, 320682 bytes).
 PDF statistics:
- 224 PDF objects out of 1000 (max. 8388607)
- 181 compressed objects within 2 object streams
- 63 named destinations out of 1000 (max. 500000)
- 39606 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 258 PDF objects out of 1000 (max. 8388607)
+ 208 compressed objects within 3 object streams
+ 76 named destinations out of 1000 (max. 500000)
+ 39632 words of extra memory for PDF output out of 42996 (max. 10000000)
 

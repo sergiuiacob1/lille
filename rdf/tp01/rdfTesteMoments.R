@@ -49,7 +49,24 @@ testInertiaMatrixForSquares <- function(){
     print ("Big square 45deg:")
     print (m)
 }
-testInertiaMatrix()
+# testInertiaMatrix()
+
+testNormalisedMomentCenters <- function(){
+    noms <- c("rdf-carre-6.png", "rdf-carre-10.png", "rdf-carre-10-30deg.png", "rdf-carre-10-45deg.png",
+        "rdf-rectangle-horizontal.png","rdf-rectangle-vertical.png","rdf-rectangle-diagonal.png","rdf-rectangle-diagonal-lisse.png")
+    noms <- c(noms, "rdf-triangle-10.png", "rdf-triangle-10-15deg.png", "rdf-triangle-10-45deg.png", "rdf-triangle-10-60deg.png")
+    for (nom in noms){
+        img <- rdfReadGreyImage(nom)
+        n20 = rdfMomentCentreNormalise(img, 2, 0)
+        n02 = rdfMomentCentreNormalise(img, 0, 2)
+        n22 = rdfMomentCentreNormalise(img, 2, 2)
+        print (nom)
+        print (c(n20, n02, n22))
+    }
+}
+testNormalisedMomentCenters()
+
+
 # # Tests to see the image orientation
 # axis <- calculateMainImageAxis("rdf-rectangle-diagonal.png", normalise=FALSE)
 # print(axis)

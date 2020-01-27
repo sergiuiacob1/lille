@@ -52,7 +52,7 @@ where $A(x, y)$ is the value of the pixel $(x, y)$ of the shape's image. One can
 \end{lstlisting}
 
 \paragraph{}
-The \emph{barycentre} is defined as being the following:
+The \emph{barycenter} is defined as being the following:
 $$(\bar{x}, \bar{y}) = (\frac{M_{10}} {M_{00}}, \frac{M_{01}} {M_{00}})$$
 
 \paragraph{}
@@ -98,108 +98,42 @@ For now, let's take a look at its values for the images with rectangles and squa
 \end{figure}
 \paragraph{}
 Upon calculating the values for the rectangles, we can observe that their matrix of inertia is different for each shape.
-For the horizontal rectangle, it's intuitive that the following equation should happen: $\mu_{20} > \mu_{02}$, and for the vertical rectangle it should be the other way aroung.
+For the horizontal rectangle, it's intuitive that the following equation should happen: $\mu_{20} > \mu_{02}$.
+That's because there are more pixels distributed over the $x$ axis. For the vertical rectangle, it's the opposite.
 The inertia matrix tells us just that.
 For the diagonal rectangle, there's an interesting observation: $\mu_{20} = \mu_{02}$. That's because the rectangle is rotated at 45 degrees, so the pixels are uniformely distributed horizontally and vertically.
 For the two diagonal rectangles, the surface differs, but it's interesting to notice that the proportion $\frac{\mu_{20}}{\mu_{02}}$ is about the same. That would mean that the rectangles are similarly oriented, which is true.
 \paragraph{}
-The $\frac{\mu_{20}}{\mu_{02}}$ proportion is also kept in the case of the the squares which aren't rotated. For the other ones, the values 
+The $\frac{\mu_{20}}{\mu_{02}}$ proportion is also kept in the case of the the squares which aren't rotated.
+Another interesting observation is that for the shapes that aren't rotated, $\mu_{11} = 0$.
+All of these already give us valuable information as to how the shape looks, so they can definitely be used as shape attributes.
+However, we can still improve these.
 % -----------------------------------------------
 
+\section{Shape's main axis of inertia}
+\subsection{Normalised Moment Centers}
+\paragraph{}
+For our next trick, we can make $\mu_{ij}$ invariant to the scale of the image. We define the \emph{normalized centered moment} as the following:
+$$\eta_{ij} = \frac{\mu_{ij}}{\mu_{00}^{1 + \frac{i + j}{2}}}$$
 
-% \begin{figure}
-%     \begin{subfigure}
-%         \centering
-%         \includegraphics{main_axis_rectangles.png}
-%         \label{fig:main-axis-rectangles}
-%     \end{subfigure}
+\begin{lstlisting}[language=R, caption=Calculating normalised centered moments]
+    rdfMomentCentreNormalise <- function (img, p, q){
+        upq = rdfMomentCentre(img, p, q)
+        u00 = rdfMomentCentre(img, 0, 0)
+        normalised = upq / (u00 ** (1 + (p + q)/2))
+        normalised
+    }
+\end{lstlisting}
 
-%     \begin{subfigure}
-%         \centering
-%         \includegraphics{main_axis_squares.png}
-%         \label{fig:main-axis-squares}
-%     \end{subfigure}
-% \end{figure}
+\paragraph{}
+Taking a look at $\eta{20}, \eta{02}$ and $\eta{22}$
 
-
-% \section{Loading data}
-% \begin{figure}
-%     \centering
-%     \includegraphics[scale=2.0]{rdf-carre-6.png}
-%     \includegraphics[scale=2.0]{rdf-carre-10.png}
-%     \includegraphics[scale=2.0]{rdf-carre-10-30deg.png}
-%     \includegraphics[scale=2.0]{rdf-triangle-10-15deg.png}
-%     \includegraphics[scale=2.0]{rdf-triangle-10-45deg.png}
-%     \includegraphics[scale=2.0]{rdf-triangle-10-60deg.png}
-%     \includegraphics[scale=2.0]{rdf-triangle-20.png}
-%     \includegraphics[scale=2.0]{rdf-rectangle-horizontal.png}
-%     \includegraphics[scale=2.0]{rdf-rectangle-vertical.png}
-%     \includegraphics[scale=2.0]{rdf-rectangle-diagonal.png}
-%     \caption{Shape images}
-%     \label{fig:gray-images}
-% \end{figure}
-
-% \paragraph{}
-% Images are loaded then converted to grayscale. Right now, we are not interested in their color.
-
-% \begin{lstlisting}[language=Python, caption=Loading images in Python]
-% def rdfReadGreyImage(nom):
-%     img = Image.open(f'images/{nom}').convert('L')
-%     img = np.asarray(img)
-%     return img
-% \end{lstlisting}
-
-% \clearpage
-
-% \section{Shape's main axis of inertia}
-% \subsection{Prerequisites}
-% \paragraph{}
-% We define the \emph{moment of a shape} as the following:
-% $$M_{ij} = \sum_{x}\sum_{y} x^{i} y^{j} A(x, y)$$
-% \paragraph{}
-% where $A(x, y)$ is the value of the pixel $(x, y)$ of the shape's image. One can easily observe that $M_{00}$ is equal to the number of pixels that are not black. We call that the \emph{surface} of the shape.
-
-% \begin{lstlisting}[language=Python, caption=Calculating the moment of a shape]
-% def rdfMoment(img, p, q):
-%     x = [x ** p for x in range(1, img.shape[0] + 1)]
-%     y = [y ** q for y in range(1, img.shape[1] + 1)]
-%     x, y = np.array(x), np.array(y)
-%     return np.dot(np.dot(x.T, img), y)
-% \end{lstlisting}
-
-% \paragraph{}
-% The \emph{barycentre} is defined as being the following:
-% $$(\bar{x}, \bar{y}) = (\frac{M_{10}} {M_{00}}, \frac{M_{01}} {M_{00}})$$
-
-% \paragraph{}
-% Having these, we can now make our $M_{ij}$ invariant to the rotation and translation of the shape. We can define the \emph{centered moment} as being:
-% $$\mu_{ij} = \sum_{x}\sum_{y} (x - \bar{x})^i(y - \bar{y})^j I(x, y)$$
-
-
-% \begin{lstlisting}[language=Python, caption=Calculating centered moments]
-% def rdfMomentCentre(img, p, q):
-%     # Barycentre
-%     s = rdfSurface(img)
-%     cx = rdfMoment(img, 1, 0) / s
-%     cy = rdfMoment(img, 0, 1) / s
-%     # Initialiser les vecteurs x et y
-%     x = [(x-cx) ** p for x in range(1, img.shape[0] + 1)]
-%     y = [(y-cy) ** q for y in range(1, img.shape[1] + 1)]
-%     # Calcul du moment centre
-%     return np.dot(np.dot(x, img), y)
-% \end{lstlisting}
-
-% \paragraph{}
-% And for our last trick, we can make $\mu_{ij}$ invariant to the scale of the image! We define the \emph{normalized centered moment} as the following:
-% $$\eta_{ij} = \frac{\mu_{ij}}{\mu_{00}^{1 + \frac{i + j}{2}}}$$
-
-% \begin{lstlisting}[language=Python, caption=Calculating normalised centered moments]
-% def rdfMomentCentreNormalise(img, p, q):
-%     upq = rdfMomentCentre(img, p, q)
-%     u00 = rdfMomentCentre(img, 0, 0)
-%     normalised = upq / (u00 ** (1 + (p + q)/2))
-%     return normalised
-% \end{lstlisting}
+\begin{figure}[h]
+    \includegraphics[height=5cm]{squares-moments.png}
+    \includegraphics[height=5cm]{rectangles_normalised_moments.png}
+    \includegraphics[height=5cm]{triangles_normalised_moments.png}
+    \caption{Normalised moment centers}
+\end{figure}
 
 % \subsection{Main axis of inertia}
 % \paragraph{}
