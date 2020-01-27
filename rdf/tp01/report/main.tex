@@ -2,6 +2,9 @@
 \usepackage{Preamble}
 \usepackage{listings}
 \usepackage{wrapfig}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{bibliography.bib}
+
 \author{Iacob Sergiu}
 \title{Shape Attributes}
 \graphicspath{ {./images/}{./../images/} }
@@ -70,17 +73,13 @@
 \chapter{Experiments}
 \subfile{2-Experiments}
 
-\chapter{Results}
-\subfile{3-Results}
-
-\chapter{Discussion}
-\subfile{4-Discussion}
-
 \chapter{Conclusion}
-\subfile{5-Conclusion}
+\subfile{3-Conclusion}
 
 \clearpage
 \pagestyle{numberonly}
+
 \printbibliography
+
 
 \end{document}

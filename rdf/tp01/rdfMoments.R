@@ -60,7 +60,7 @@ rdfInertiaMatrix <- function(nom){
   I <- matrix(c(u20, u11, u11, u02), nrow=2, ncol=2)
 }
 
-mainInertionAxis <- function(im, normalise=TRUE){
+mainInertionMoments <- function(im, normalise=TRUE){
   if (normalise == TRUE)
     f <- rdfMomentCentreNormalise
   else
@@ -70,10 +70,8 @@ mainInertionAxis <- function(im, normalise=TRUE){
   u02 <- f(im, 0, 2)
   I <- matrix(c(u20, u11, u11, u02), nrow=2, ncol=2)
   ev <- eigen(I)
-  eigenValues <- ev$values
-  eigenVectors <- ev$vectors
-  tenseur <- diag(eigenValues)
-  P <- cbind(eigenVectors)
+  tenseur <- diag(ev$values)
+  P <- cbind(ev$vectors)
   # ce dessous est pour tourner l´image
   # I = solve(P) %*% I %*% P
 }
@@ -84,7 +82,7 @@ calculateMainImageAxis <- function(nom, normalise=TRUE){
     display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
   }
   print (normalise)
-  axis <- mainInertionAxis(img, normalise)
+  axis <- mainInertionMoments(img, normalise)
 }
 
 rdfMomentCentreNormalise <- function (img, p, q){

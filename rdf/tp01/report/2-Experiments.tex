@@ -36,7 +36,6 @@ Images are loaded then converted to grayscale. Right now, we are not interested 
 \clearpage
 
 \section{Moments of a shape}
-\subsection{Prerequisites}
 \paragraph{}
 We define the \emph{moment of a shape} as the following:
 $$M_{ij} = \sum_{x}\sum_{y} x^{i} y^{j} A(x, y)$$
@@ -75,7 +74,7 @@ $$\mu_{ij} = \sum_{x}\sum_{y} (x - \bar{x})^i(y - \bar{y})^j I(x, y)$$
 \end{lstlisting}
 
 % -----------------------------------------------
-\subsection{Inertia matrix}
+\section{Inertia matrix}
 \paragraph{}
 Inspiring ourselves from physics, we may use these moments to calculate the inertia matrix:
 $$ I = 
@@ -102,7 +101,7 @@ For the horizontal rectangle, it's intuitive that the following equation should 
 That's because there are more pixels distributed over the $x$ axis. For the vertical rectangle, it's the opposite.
 The inertia matrix tells us just that.
 For the diagonal rectangle, there's an interesting observation: $\mu_{20} = \mu_{02}$. That's because the rectangle is rotated at 45 degrees, so the pixels are uniformely distributed horizontally and vertically.
-For the two diagonal rectangles, the surface differs, but it's interesting to notice that the proportion $\frac{\mu_{20}}{\mu_{02}}$ is about the same. That would mean that the rectangles are similarly oriented, which is true.
+For the two diagonal rectangles, the values differ, but it's interesting to notice that the proportion $\frac{\mu_{20}}{\mu_{02}}$ is about the same. That would mean that the rectangles are similarly oriented, which is true.
 \paragraph{}
 The $\frac{\mu_{20}}{\mu_{02}}$ proportion is also kept in the case of the the squares which aren't rotated.
 Another interesting observation is that for the shapes that aren't rotated, $\mu_{11} = 0$.
@@ -110,7 +109,7 @@ All of these already give us valuable information as to how the shape looks, so 
 However, we can still improve these.
 % -----------------------------------------------
 
-\section{Shape's main axis of inertia}
+\section{Shape's inertia}
 \subsection{Normalised Moment Centers}
 \paragraph{}
 For our next trick, we can make $\mu_{ij}$ invariant to the scale of the image. We define the \emph{normalized centered moment} as the following:
@@ -125,60 +124,89 @@ $$\eta_{ij} = \frac{\mu_{ij}}{\mu_{00}^{1 + \frac{i + j}{2}}}$$
     }
 \end{lstlisting}
 
+\clearpage
+
 \paragraph{}
-Taking a look at $\eta{20}, \eta{02}$ and $\eta{22}$
+Taking a look at the values\footnote{The values were rounded to 3 decimals}, we can notice that $\eta_{22}$, for example, becomes invariant to the size of the image (for example for the triangles).
+$\eta_{20}$ and $\eta_{02}$ still tell us how pixels are distributed over the $x$ and $y$ axis, but they are now not influenced by the shape's size.
 
 \begin{figure}[h]
-    \includegraphics[height=5cm]{squares-moments.png}
-    \includegraphics[height=5cm]{rectangles_normalised_moments.png}
-    \includegraphics[height=5cm]{triangles_normalised_moments.png}
+    \centering
+    \includegraphics[width=5cm, height=5cm]{rectangles_normalised_moments.png}
+    \includegraphics[width=5cm, height=5cm]{squares_normalised_moments.png}
+    \includegraphics[width=5cm, height=5cm]{triangles_normalised_moments.png}
     \caption{Normalised moment centers}
 \end{figure}
 
-% \subsection{Main axis of inertia}
-% \paragraph{}
-% Inspiring ourselves from physics, we may use the shape's moment of inertia matrix. With that, we're able to tell which is a figure's main axis of inertia.
+\subsection{Main moments of inertia}
+\paragraph{}
+Using the \emph{normalised centered moments}, rather than just \emph{centered moments}, we can calculate:
+$$ I = 
+\begin{pmatrix}
+    \eta_{20} & \eta_{11}\\
+    \eta_{11} & \eta_{02}
+\end{pmatrix}
+$$
+\paragraph{}
+Afterwards, we can calculate the \emph{eigen values} of the matrix $I$. The values obtained, $I_1$ and $I_2$ are the \emph{main moments of inertia}:
+$$ I' = 
+\begin{pmatrix}
+    I_1 & 0\\
+    0 & I_2
+\end{pmatrix}
+$$
 
-% \begin{lstlisting}[language=Python, caption=Calculating normalised centered moments]
-% def mainInertionAxis(img, normalise=True):
-%     f = rdfMomentCentreNormalise if normalise is True else rdfMomentCentre
-%     u20 = f(img, 2, 0)
-%     u11 = f(img, 1, 1)
-%     u02 = f(img, 0, 2)
-%     I = np.ndarray(buffer=np.array(
-%         [u20, u11, u11, u02]), shape=(2, 2), dtype='float')
-%     _, eigenVectors = np.linalg.eig(I)
-%     P = eigenVectors.T
-%     return P
-% \end{lstlisting}
+\begin{lstlisting}[language=R, caption=Calculating the main moments of inertia]    
+    mainInertionAxis <- function(im, normalise=TRUE){
+        if (normalise == TRUE)
+            f <- rdfMomentCentreNormalise
+        else
+            f <- rdfMomentCentre
+        u20 <- f(im, 2, 0)
+        u11 <- f(im, 1, 1)
+        u02 <- f(im, 0, 2)
+        I <- matrix(c(u20, u11, u11, u02), nrow=2, ncol=2)
+        ev <- eigen(I)
+        tenseur <- diag(ev$values)
+    }
+\end{lstlisting}
 
-% \paragraph{}
-% Our first experiment is calculating the main axis for the 3 rectangles, in the following order: diagonal, horizontal and vertical. The results clearly show us that we can easily differentiate the fact that the shapes are rotated.
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics{main_axis_rectangles.png}
-%     \label{fig:main-axis-rectangles}
-% \end{figure}
+\clearpage
 
-% \paragraph{}
-% Let us now analyse the square images. From the results, we can see that the main axis of inertia for the squares that only differ in size is the same.
-% For the square that is rotated, we get different results. Therefore, calculating the main axis of inertia is invariant to the scale of the shape.
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics{main_axis_squares.png}
-%     \label{fig:main-axis-squares}
-% \end{figure}
+\paragraph{}
+Let's have a look at how $I_1$ and $I_2$ look for the shapes above. We can see that these values\footnote{The values were rounded to 3 decimals} tell us how much "inertia" there is on each of the shape's axis.
+However, we have no information as to how shapes are rotated. For that, we can look at the \emph{eigen vectors} of the $I$ matrix. 
 
-% % \begin{figure}
-% %     \begin{subfigure}
-% %         \centering
-% %         \includegraphics{main_axis_rectangles.png}
-% %         \label{fig:main-axis-rectangles}
-% %     \end{subfigure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5cm]{squares_main_moments.png}
+    \includegraphics[height=5cm]{triangles_main_moments.png}
+    \caption{Main inertia moments}
+    \label{fig:main_inertia_moments}
+\end{figure}
 
-% %     \begin{subfigure}
-% %         \centering
-% %         \includegraphics{main_axis_squares.png}
-% %         \label{fig:main-axis-squares}
-% %     \end{subfigure}
-% % \end{figure}
+\subsection{Main axis of inertia}
+\paragraph{}
+The \emph{eigen vectors} of the $I$ matrix can tell us how the shapes are oriented.
+We can clearly see that the 2 squares that are not rotated have the same \emph{eigen vectors}. The triangles, however, all have different vectors because they are all rotated in a different way, but their \emph{main moments of inertia} are the same.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5cm]{squares_main_axis.png}
+    \includegraphics[height=5cm]{triangles_main_axis.png}
+    \caption{Main inertia axis}
+    \label{fig:main_inertia_axis}
+\end{figure}
+
+
+\paragraph{}
+Having made these observation, we can conclude that these attributes are fairly important to describe a shape. They can tell us how their ``weight'' is distributed over their \emph{main axis of inertia}.
+
+\clearpage
+
+\section{Hu invariants}
+\paragraph{}
+Using the \emph{normalised center moments}, we can define the \emph{Hu invariants}. These are invariants with respect to translation, scale, and rotation.
+Please refer to NANNANANANA for more information.
+\paragraph{}
+Analysing the invariants, we can see that...
