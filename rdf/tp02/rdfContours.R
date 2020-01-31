@@ -17,8 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # -----------------------------------------------------------------------
 
-source ("rdfMoments.R")
-
 # Lit un contour dans un fichier texte
 rdfChargeFichierContour <- function (nom) {
   contour <- read.table (nom)
@@ -55,8 +53,24 @@ rdfDistances <- function (cont) {
   # Points extremes
   debut = head (cont, 1)
   fin = tail (cont, 1)
-  # Calculer les distances: A MODIFIER !
-  rep (0, length (cont))
+  distances <- rep (0, length (cont))
+  for (i in 1:length(cont)){
+    distances[i] <- rdfDistanceToLine(cont[i], debut, fin)
+  }
+  distances
+}
+
+rdfDistanceToLine <- function (p, p1, p2){
+  x1 <- Re(p1)
+  y1 <- Im(p1)
+  x2 <- Re(p2)
+  y2 <- Im(p2)
+  m <- (y1 - y2)/(x1 - x2)
+  c <- y1 - m * x1
+  b <- 1
+  
+  res <- abs(m * Re(p) + b * Im(p) + c)/sqrt(m**2 + b**2)
+  res
 }
 
 rdfAnnuleDescFourier <- function (desc, ratio){

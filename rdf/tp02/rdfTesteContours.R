@@ -38,33 +38,55 @@ print(cont)
 # points (cont8, main = nom, type = "o", asp = 1, col = "green",
 #       ylim = rev (range (Im (cont))))
 
-nom <- "rdf-carre-80.txt"
-cont <- rdfChargeFichierContour(nom)
-fourier <- fft(cont)/length(cont)
-inversed <- fft(fourier, inverse=TRUE)
-print (all.equal(inversed, cont))
-# So, FFT allows us to reconstruct a form
 
-Z0 <- fourier[1]
-plot (cont, main = nom, type = "o", asp = 1, col = "red",
-      ylim = rev (range (Im (cont))))
-points(Z0, col="red")
-# Z0 is the center of the form
-fourier[1] <- fourier[1] + 2 + 3i
-inversed <- fft(fourier, inverse=TRUE)
-points (inversed, main = nom, type = "o", asp = 1, col = "blue",
-      ylim = rev (range (Im (inversed))))
-points(fourier[1], col="blue")
-# If we add another complex number to Z0, we change the form' center
-# So we make a transition
+reconstructShapeWithFourier <- function(nom){
+  cont <- rdfChargeFichierContour(nom)
+  fourier <- fft(cont)/length(cont)
+  inversed <- fft(fourier, inverse=TRUE)
+  print ("Can we reconstruct our shape from Fourier descriptors?")
+  print (all.equal(inversed, cont))
+}
+# reconstructShapeWithFourier("rdf-carre-80.txt")
 
 
-nom <- "rdf-carre-80.txt"
-cont <- rdfChargeFichierContour(nom)
-fourier <- fft(cont)/length(cont)
-fourier <- rdfAnnuleDescFourier(fourier, 0.1)
-inversed <- fft(fourier, inverse=TRUE)
-plot (cont, main = nom, type = "o", asp = 1, col = "red",
+analyseFirstFourierDescriptor <- function(nom){
+  cont <- rdfChargeFichierContour(nom)
+  Z0 <- fourier[1]
+  plot (cont, main = nom, type = "o", asp = 1, col = "red",
         ylim = rev (range (Im (cont))))
-points (inversed, main = nom, type = "o", asp = 1, col = "blue",
+  points(Z0, col="red")
+  # Z0 is the center of the form
+  fourier[1] <- fourier[1] + 0.5 + 3i
+  inversed <- fft(fourier, inverse=TRUE)
+  points (inversed, main = nom, type = "o", asp = 1, col = "blue",
         ylim = rev (range (Im (inversed))))
+  points(fourier[1], col="blue")
+  # If we add another complex number to Z0, we change the form' center
+  # So we make a transition
+}
+analyseFirstFourierDescriptor("rdf-carre-80.txt")
+
+
+simplifyShape <- function(nom, ratio){
+  cont <- rdfChargeFichierContour(nom)
+  fourier <- fft(cont)/length(cont)
+  fourier <- rdfAnnuleDescFourier(fourier, ratio)
+  inversed <- fft(fourier, inverse=TRUE)
+  plot (cont, main = nom, type = "o", asp = 1, col = "red",
+          ylim = rev (range (Im (cont))))
+  points (inversed, main = nom, type = "o", asp = 1, col = "blue",
+          ylim = rev (range (Im (inversed))))
+}
+simplifyShape("rdf-carre-80.txt", 0.075)
+
+findShapeContour <- function (nom, dmax){
+  cont <- rdfChargeFichierContour(nom)
+  cont <- rdfAlgorithmeCorde (cont, dmax)
+  plot (cont, main = nom, type = "o", asp = 1, col = "red",
+        ylim = rev (range (Im (cont))))
+}
+findShapeContour("rdf-cercle-80.txt", 0.5)
+
+rdfAlgorithmeCorde (cont, 10)
+
+rdfDistanceToLine(complex(real=1, imaginary=2.5), complex(real=1, imaginary=2.5), complex(real=3, imaginary=3))

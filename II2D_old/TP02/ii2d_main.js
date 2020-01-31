@@ -15,7 +15,7 @@ function addGenerators(engine) {
   var gen2 = new GeneratorBox(0, 10);
   gen2.min.setXY(150, 300);
   gen2.max.setXY(180, 330);
-  engine.particleManager.addGenerators([gen1, gen2]);
+  engine.particleManager.generatorList.push(gen1, gen2); // ajoute au tableau generatorList
 }
 
 function addEventListeners() {
@@ -27,7 +27,7 @@ function addEventListeners() {
 
 function addObstacles() {
   var obs1 = new Circle(new Vector(100, 100), 50);
-  var obs2 = new Segment(new Vector(100, 300), new Vector(250, 500));
+  var obs2 = new Segment(new Vector(100, 200), new Vector(250, 300));
   engine.obstacleManager.all.push(obs1, obs2);
 }
 

@@ -1,0 +1,15 @@
+\section{Context}
+\paragraph{}
+This report is the result of a university assignment. It aims to prove that the student understood the motivation, goals and means of studying pattern recognition. Therefore, this is a way of summarizing a series of observations and experiments done on images containing shapes.
+
+\section{Motivation}
+\paragraph{}
+We want to be able to extract shapes from images and differentiate between them.
+Using various \textbf{shape attributes}, we should be able to conclude which shapes are similar, which are different, which of them are the same but just rotated at different angles, what their main axis of inertia is and so on.
+Being able to recognise these attributes is a small but important step towards us to identifying and categorising shapes from images.
+From there on, many posibilities exist: image indexing, searching for certain shapes (e.g. ``images with squares'') etc.
+
+
+\section{Goals}
+\paragraph{}
+Given multiple shapes, $S_1, \dots, S_n$, each shape $S_i$ being represented by its image pixels, find proper \textbf{shape indexes} that would allow us to classify these shapes and conclude on a shape's features (e.g. main axis of inertia for $S_i$). Therefore, we are interested in finding means (that is \textbf{shape attributes}, \textbf{shape invariants}) to uniquely identify them. The \textbf{shape invariants} would help us say that $S_i$ and $S_j, i \neq j$ are the same, even if $S_j$ is rotated at a certain angle, for example.
