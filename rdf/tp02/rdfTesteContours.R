@@ -28,25 +28,26 @@ print(cont)
 
 # Afficher le contour
 # plot (cont, main = nom, type = "o", asp = 1, col = "red",
-#       ylim = rev (range (Im (cont))))
-
+#      ylim = rev (range (Im (cont))))
+# 
 # cont4 <- cont[seq(1, length(cont), 4)]
 # points (cont4, main = nom, type = "o", asp = 1, col = "blue",
-#       ylim = rev (range (Im (cont))))
-
+#      ylim = rev (range (Im (cont))))
+# 
 # cont8 <- cont[seq(1, length(cont), 8)]
 # points (cont8, main = nom, type = "o", asp = 1, col = "green",
-#       ylim = rev (range (Im (cont))))
-
+#      ylim = rev (range (Im (cont))))
+# 
 
 reconstructShapeWithFourier <- function(nom){
   cont <- rdfChargeFichierContour(nom)
   fourier <- fft(cont)/length(cont)
+  print (fourier)
   inversed <- fft(fourier, inverse=TRUE)
   print ("Can we reconstruct our shape from Fourier descriptors?")
   print (all.equal(inversed, cont))
 }
-# reconstructShapeWithFourier("rdf-carre-80.txt")
+reconstructShapeWithFourier("rdf-carre-80.txt")
 
 
 analyseFirstFourierDescriptor <- function(nom){
@@ -86,7 +87,3 @@ findShapeContour <- function (nom, dmax){
         ylim = rev (range (Im (cont))))
 }
 findShapeContour("rdf-cercle-80.txt", 0.5)
-
-rdfAlgorithmeCorde (cont, 10)
-
-rdfDistanceToLine(complex(real=1, imaginary=2.5), complex(real=1, imaginary=2.5), complex(real=3, imaginary=3))

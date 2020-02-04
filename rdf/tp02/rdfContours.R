@@ -65,11 +65,12 @@ rdfDistanceToLine <- function (p, p1, p2){
   y1 <- Im(p1)
   x2 <- Re(p2)
   y2 <- Im(p2)
-  m <- (y1 - y2)/(x1 - x2)
-  c <- y1 - m * x1
-  b <- 1
   
-  res <- abs(m * Re(p) + b * Im(p) + c)/sqrt(m**2 + b**2)
+  a <- y2 - y1
+  b <- -(x2 - x1)
+  c <- -x1*(y2 - y1) + y1*(x2-x1)
+  
+  res <- abs(a * Re(p) + b * Im(p) + c)/sqrt(a**2 + b**2)
   res
 }
 
@@ -83,6 +84,5 @@ rdfAnnuleDescFourier <- function (desc, ratio){
   end <- middle + nb_delete/2
   desc[start:end] <- 0
   desc
-
 }
 

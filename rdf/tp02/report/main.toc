@@ -1,0 +1,50 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {british}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.1}Context}{2}{section.1.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{2}{section*.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.2}Motivation}{2}{section.1.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{2}{section*.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1.3}Goals}{2}{section.1.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{2}{section*.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {2}Experiments}{3}{chapter.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.1}Technical acknowledgements}{3}{section.2.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{3}{section*.4}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.2}Loading data}{3}{section.2.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{3}{section*.5}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{3}{section*.6}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.3}Fourier Descriptors}{4}{section.2.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.3.1}Outer contour points}{4}{subsection.2.3.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{4}{section*.8}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{4}{section*.10}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{5}{section*.11}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{5}{section*.13}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.3.2}Cancelling Fourier descriptors}{6}{subsection.2.3.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{6}{section*.15}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.4}Simplifying the shape contour}{7}{section.2.4}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {3}Conclusion}{8}{chapter.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{8}{section*.18}% 
