@@ -20,6 +20,7 @@
 # Chargement des fonctions externes
 library ("EBImage")
 source ("rdfContours.R")
+source ("./../tp01/rdfMoments.R")
 
 # Chargement d'un contour
 nom <- "rdf-cercle-80.txt"
@@ -86,4 +87,64 @@ findShapeContour <- function (nom, dmax){
   plot (cont, main = nom, type = "o", asp = 1, col = "red",
         ylim = rev (range (Im (cont))))
 }
-findShapeContour("rdf-cercle-80.txt", 0.5)
+findShapeContour("rdf-cercle-80.txt", 1)
+
+# cont <- rdfChargeFichierContour(nom)
+# cont <- rdfAlgorithmeCorde (cont, 0)
+# plot (cont, main = nom, type = "o", asp = 1, col = "red",
+#       ylim = rev (range (Im (cont))))
+# cont2 <- rdfAlgorithmeCorde (cont, 0.5)
+# lines (cont2, main = nom, type = "o", asp = 1, col = "blue",
+#       ylim = rev (range (Im (cont))))
+# cont3 <- rdfAlgorithmeCorde (cont, 1)
+# lines (cont3, main = nom, type = "o", asp = 1, col = "green",
+#         ylim = rev (range (Im (cont))))
+# cont4 <- rdfAlgorithmeCorde (cont, 3)
+# lines (cont4, main = nom, type = "o", asp = 1, col = "yellow",
+#         ylim = rev (range (Im (cont))))
+# legend(x="topleft", y=0.92, legend=c("0", "0.5", "1", "3"),
+#        col=c("red", "blue", "green", "yellow"), lty=1:2, cex=0.8, title="dmax")
+
+compareMethods <- function(nom, ratio, dmax){
+  img <- rdfReadGreyImage(nom)
+  cont <- rdfContour(img)
+  plot (cont, main = nom, type = "o", asp = 1, col = "red",
+        ylim = rev (range (Im (cont))))
+  
+  fourier <- fft(cont)/length(cont)
+  fourier <- rdfAnnuleDescFourier(fourier, ratio)
+  inversed <- fft(fourier, inverse=TRUE)
+  points (inversed, main = nom, type = "o", asp = 1, col = "blue",
+        ylim = rev (range (Im (cont))))
+  
+  chord <- rdfAlgorithmeCorde (cont, dmax)
+  points (chord, main = nom, type = "o", asp = 1, col = "green",
+          ylim = rev (range (Im (cont))))
+  legend(x="topleft", y=0.92, legend=c("original", sprintf("ratio=%s", ratio), sprintf("dmax=%s", dmax)),
+         col=c("red", "blue", "green"), lty=1:2, cex=0.8, title="parameters")
+  legend(x="bottomleft", y=0.92, legend=c(length(cont), length(fourier), length(chord)),
+         col=c("red", "blue", "green"), lty=1:2, cex=0.8, title="no. points")
+}
+
+compareMethods("rdf-rectangle-horizontal.png", 0.8, 1)
+
+
+ratio <- 0.075
+dmax <- 0.1
+cont <- rdfChargeFichierContour("rdf-cercle-80.txt")
+plot (cont, main = nom, type = "o", asp = 1, col = "red",
+      ylim = rev (range (Im (cont))))
+
+fourier <- fft(cont)/length(cont)
+fourier <- rdfAnnuleDescFourier(fourier, ratio)
+inversed <- fft(fourier, inverse=TRUE)
+points (inversed, main = nom, type = "o", asp = 1, col = "blue",
+        ylim = rev (range (Im (cont))))
+
+chord <- rdfAlgorithmeCorde (cont, dmax)
+points (chord, main = nom, type = "o", asp = 1, col = "green",
+        ylim = rev (range (Im (cont))))
+legend(x="topleft", y=0.92, legend=c("original", sprintf("ratio=%s", ratio), sprintf("dmax=%s", dmax)),
+       col=c("red", "blue", "green"), lty=1:2, cex=0.8, title="parameters")
+legend(x="bottomleft", y=0.92, legend=c(length(cont), length(fourier), length(chord)),
+       col=c("red", "blue", "green"), lty=1:2, cex=0.8, title="no. points")

@@ -112,235 +112,110 @@ When doing so, it is important to know that we should start cancelling the descr
     \centering
     \includegraphics[width=\textwidth/2-10pt]{fourier_simplified_1.png}
     \includegraphics[width=\textwidth/2-10pt]{fourier_simplified_2.png}
-    \caption{Simplified contours, ratio from left to right: 0.5, 0.075}
+    \caption{Cancelling Fourier descriptors, $ratio \in \{0.5, 0.075\}$}
 \end{figure}
 
 \clearpage
 
 \section{Simplifying the shape contour}
 \paragraph{}
+We can make use of \emph{circle's chord} to reduce the number of outer contour points. We'll reduce our shape to a sequence of segments between points.
+Given a sequence of contour points $S = P_1, \dots, P_n$ and $P_1P_n$ the line between the first and last point, we define $X$ as the "furthest" point from this line and $d_X$ the distance from $X$ to $P_1P_n$.
+If $d_X$ is less than some $d_{max}$, then we add the segment $P_1P_n$ as part of our ``simplified'' contour.
+If not, we divide $S$ into $S_1 = P_1, \dots, X$ and $S_2 = X, \dots, P_n$ and apply the same algorithm as above.
+Please refer to \cite{point_to_line_distance} and \cite{line_equation_complex_numbers} for how the distances were calculated.
 
+\begin{lstlisting}[language=R, caption=Chord algorithm]
+    # Algorithme de la corde pour la reduction d'un contour
+    rdfAlgorithmeCorde <- function (cont, dmax) {
+        # Calcul des distances
+        d <- rdfDistances (cont)
+        # Si distance maxi inferieur au seuil, ne garder que les extremites
+        if (max (d) <= dmax) {
+            c (head (cont, 1), tail (cont, 1))
+        # Sinon decouper en deux parties
+        } else {
+            # Point le plus eloigne
+            loin <- which.max (d)
+            # Reduire les deux sous chaines
+            cont1 <- rdfAlgorithmeCorde (cont[1:loin], dmax)
+            cont2 <- rdfAlgorithmeCorde (cont[loin:length (cont)], dmax)
+            # Enlever un point et contatener
+            c (cont1, tail (cont2, -1))
+        }
+    }
+\end{lstlisting}
 
+\begin{lstlisting}[language=R, caption=Calculating distances from $P_1P_n$ to each point]
+    # Calcul des distances entre les points et la corde
+    rdfDistances <- function (cont) {
+        # Points extremes
+        debut = head (cont, 1)
+        fin = tail (cont, 1)
+        distances <- rep (0, length (cont))
+        for (i in 1:length(cont)){
+            distances[i] <- rdfDistanceToLine(cont[i], debut, fin)
+        }
+        distances
+    }
+\end{lstlisting}
 
-
-% \clearpage
-
-% \section{Moments of a shape}
-% \paragraph{}
-% We define the \emph{moment of a shape} as the following:
-% $$M_{ij} = \sum_{x}\sum_{y} x^{i} y^{j} A(x, y)$$
-% \paragraph{}
-% where $A(x, y)$ is the value of the pixel $(x, y)$ of the shape's image. One can easily observe that $M_{00}$ is equal to the number of pixels that are not black. We call that the \emph{surface} of the shape.
-
-% \begin{lstlisting}[language=R, caption=Calculating the moment of a shape]
-%     rdfMoment <- function (im, p, q) {
-%         x <- (1 : (dim (im)[1])) ^ p
-%         y <- (1 : (dim (im)[2])) ^ q
-%         as.numeric (rbind (x) %*% im %*% cbind (y))
-%         }
-% \end{lstlisting}
-
-% \paragraph{}
-% The \emph{barycenter} is defined as being the following:
-% $$(\bar{x}, \bar{y}) = (\frac{M_{10}} {M_{00}}, \frac{M_{01}} {M_{00}})$$
-
-% \paragraph{}
-% Having these, we can now make our $M_{ij}$ invariant to the translation of the shape. We can define the \emph{centered moment} as being:
-% $$\mu_{ij} = \sum_{x}\sum_{y} (x - \bar{x})^i(y - \bar{y})^j I(x, y)$$
-
-% \begin{lstlisting}[language=R, caption=Calculating centered moments]
-%     rdfMomentCentre <- function (im, p, q) {
-%         # Barycentre
-%         s <- rdfSurface (im)
-%         cx <- rdfMoment (im, 1, 0) / s
-%         cy <- rdfMoment (im, 0, 1) / s
-%         # Initialiser les vecteurs x et y
-%         x <- (1 : (dim (im)[1]) - cx) ^ p
-%         y <- (1 : (dim (im)[2]) - cy) ^ q
-%         # Calcul du moment centre
-%         as.numeric (rbind (x) %*% im %*% cbind (y))
-%       }
-      
-% \end{lstlisting}
-
-% % -----------------------------------------------
-% \section{Inertia matrix}
-% \paragraph{}
-% Inspiring ourselves from physics, we may use these moments to calculate the inertia matrix:
-% $$ I = 
-% \begin{pmatrix}
-%     \mu_{20} & \mu_{11}\\
-%     \mu_{11} & \mu_{02}
-% \end{pmatrix}
-% $$
-
-% \clearpage
-% % -----------------------------------------------
-% \paragraph{}
-% We'll be using $I$ later on to tell which is the main axis of inertia for different shapes.
-% For now, let's take a look at its values for the images with rectangles and squares.
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[height=5cm]{rectangles-moments.png}
-%     \includegraphics[height=5cm]{squares-moments.png}
-%     \caption{Inertia matrices for rectangles and squares}
-% \end{figure}
-% \paragraph{}
-% Upon calculating the values for the rectangles, we can observe that their matrix of inertia is different for each shape.
-% For the horizontal rectangle, it's intuitive that the following equation should happen: $\mu_{20} > \mu_{02}$.
-% That's because there are more pixels distributed over the $x$ axis. For the vertical rectangle, it's the opposite.
-% The inertia matrix tells us just that.
-% For the diagonal rectangle, there's an interesting observation: $\mu_{20} = \mu_{02}$. That's because the rectangle is rotated at 45 degrees, so the pixels are uniformely distributed horizontally and vertically.
-% For the two diagonal rectangles, the values differ, but it's interesting to notice that the proportion $\frac{\mu_{20}}{\mu_{02}}$ is about the same. That would mean that the rectangles are similarly oriented, which is true.
-% \paragraph{}
-% The $\frac{\mu_{20}}{\mu_{02}}$ proportion is also kept in the case of the the squares which aren't rotated.
-% Another interesting observation is that for the shapes that aren't rotated, $\mu_{11} = 0$.
-% All of these already give us valuable information as to how the shape looks, so they can definitely be used as shape attributes.
-% However, we can still improve these.
-% % -----------------------------------------------
-
-% \section{Shape's inertia}
-% \subsection{Normalised Moment Centers}
-% \paragraph{}
-% For our next trick, we can make $\mu_{ij}$ invariant to the scale of the image. We define the \emph{normalized centered moment} as the following:
-% $$\eta_{ij} = \frac{\mu_{ij}}{\mu_{00}^{1 + \frac{i + j}{2}}}$$
-
-% \begin{lstlisting}[language=R, caption=Calculating normalised centered moments]
-%     rdfMomentCentreNormalise <- function (img, p, q){
-%         upq = rdfMomentCentre(img, p, q)
-%         u00 = rdfMomentCentre(img, 0, 0)
-%         normalised = upq / (u00 ** (1 + (p + q)/2))
-%         normalised
-%     }
-% \end{lstlisting}
-
-% \clearpage
-
-% \paragraph{}
-% Taking a look at the values\footnote{The values were rounded to 3 decimals}, we can notice that $\eta_{22}$, for example, becomes invariant to the size of the image (for example for the triangles).
-% $\eta_{20}$ and $\eta_{02}$ still tell us how pixels are distributed over the $x$ and $y$ axis, but they are now not influenced by the shape's size.
-
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=5cm, height=5cm]{rectangles_normalised_moments.png}
-%     \includegraphics[width=5cm, height=5cm]{squares_normalised_moments.png}
-%     \includegraphics[width=5cm, height=5cm]{triangles_normalised_moments.png}
-%     \caption{Normalised moment centers}
-% \end{figure}
-
-% \subsection{Main moments of inertia}
-% \paragraph{}
-% Using the \emph{normalised centered moments}, rather than just \emph{centered moments}, we can calculate:
-% $$ I = 
-% \begin{pmatrix}
-%     \eta_{20} & \eta_{11}\\
-%     \eta_{11} & \eta_{02}
-% \end{pmatrix}
-% $$
-% \paragraph{}
-% Afterwards, we can calculate the \emph{eigen values} of the matrix $I$. The values obtained, $I_1$ and $I_2$ are the \emph{main moments of inertia}:
-% $$ I' = 
-% \begin{pmatrix}
-%     I_1 & 0\\
-%     0 & I_2
-% \end{pmatrix}
-% $$
-
-% \begin{lstlisting}[language=R, caption=Calculating the main moments of inertia]    
-%     mainInertionAxis <- function(im, normalise=TRUE){
-%         if (normalise == TRUE)
-%             f <- rdfMomentCentreNormalise
-%         else
-%             f <- rdfMomentCentre
-%         u20 <- f(im, 2, 0)
-%         u11 <- f(im, 1, 1)
-%         u02 <- f(im, 0, 2)
-%         I <- matrix(c(u20, u11, u11, u02), nrow=2, ncol=2)
-%         ev <- eigen(I)
-%         tenseur <- diag(ev$values)
-%     }
-% \end{lstlisting}
-
-% \clearpage
-
-% \paragraph{}
-% Let's have a look at how $I_1$ and $I_2$ look for the shapes above. We can see that these values\footnote{The values were rounded to 3 decimals} tell us how much "inertia" there is on each of the shape's axis.
-% However, we have no information as to how shapes are rotated. For that, we can look at the \emph{eigen vectors} of the $I$ matrix. 
-
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[height=5cm]{squares_main_moments.png}
-%     \includegraphics[height=5cm]{triangles_main_moments.png}
-%     \caption{Main inertia moments}
-%     \label{fig:main_inertia_moments}
-% \end{figure}
-
-% \subsection{Main axis of inertia}
-% \paragraph{}
-% The \emph{eigen vectors} of the $I$ matrix can tell us how the shapes are oriented.
-% We can clearly see that the 2 squares that are not rotated have the same \emph{eigen vectors}. The triangles, however, all have different vectors because they are all rotated in a different way, but their \emph{main moments of inertia} are the same.
-
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[height=5cm]{squares_main_axis.png}
-%     \includegraphics[height=5cm]{triangles_main_axis.png}
-%     \caption{Main inertia axis}
-%     \label{fig:main_inertia_axis}
-% \end{figure}
-
-
-% \paragraph{}
-% Having made these observation, we can conclude that these attributes are fairly important to describe a shape. They can tell us how their ``weight'' is distributed over their \emph{main axis of inertia}.
-
-% \clearpage
-
-% \section{Hu invariants}
-% \paragraph{}
-% Using the \emph{normalised center moments}, we can define the \emph{Hu invariants}. These are invariants with respect to translation, scale, and rotation.
-% Please refer to \url{https://en.wikipedia.org/wiki/Image_moment} see how these are defined. We'll only look at the first 5 invariants.
-
-% \begin{lstlisting}[language=R, caption=Calculating Hu invariants]
-%     rdfMomentsInvariants <- function(nom){
-%         img <- rdfReadGreyImage(nom)
-%         if (interactive ()) {
-%             display (img, paste('images/', nom, sep=''), method="raster", all=TRUE)
-%         }
+\begin{lstlisting}[language=R, caption=Distance from a point to a line]
+    rdfDistanceToLine <- function (p, p1, p2){
+        x1 <- Re(p1)
+        y1 <- Im(p1)
+        x2 <- Re(p2)
+        y2 <- Im(p2)
         
-%         n02 <- rdfMomentCentreNormalise(img, 0, 2)
-%         n03 <- rdfMomentCentreNormalise(img, 0, 3)
-%         n11 <- rdfMomentCentreNormalise(img, 1, 1)
-%         n12 <- rdfMomentCentreNormalise(img, 1, 2)
-%         n20 <- rdfMomentCentreNormalise(img, 2, 0)
-%         n21 <- rdfMomentCentreNormalise(img, 2, 1)
-%         n30 <- rdfMomentCentreNormalise(img, 3, 0)
+        a <- y2 - y1
+        b <- -(x2 - x1)
+        c <- -x1*(y2 - y1) + y1*(x2-x1)
         
-%         hu1 <- n20 + n02
-%         hu2 <- (n20 - n02)**2 + (2*n11)**2
-%         hu3 <- (n30 - 3*n12)**2 + (3*n21 - n03)**2
-%         hu4 <- (n30 + n12)**2 + (n21 + n03)**2
-%         hu5 <- (n30 - 3*n12)*(n30 + n12)*((n30 + n12)**2 - 3*(n21 + n03) **
-%                                             2) + (3*n21-n03)*(n21+n03)*(3*(n30 + n12)**2 - (n21 + n03)**2)
-        
-%         c(hu1, hu2, hu3, hu4, hu5)
-%     }
-% \end{lstlisting}
+        res <- abs(a * Re(p) + b * Im(p) + c)/sqrt(a**2 + b**2)
+        res
+    }
+\end{lstlisting}
 
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=\textwidth]{hu_invariants.png}
-%     \caption{Hu invariants for shapes}
-% \end{figure}
+\clearpage
 
-% \paragraph{}
-% Analysing the values\footnote{Values here were rounded to 4 decimals} above, we can see that some of these are not affected by a shape's rotation.
-% For example, $hu_3$ is similar for the triangles. For the horizontal and vertical rectangles, $hu_1$ has the same value, as the shapes have the same \emph{surface} and are not rotated.
+\paragraph{}
+Being able to parametrise the algorithm with $d_{max}$ will allow us to reach the trade-off between simplicity and precision that we mentioned in the introduction.\ref{trade-off}
+Let's take a look at the results:
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth - 1pt]{chord_algorithm.png}
+    \caption{Chord algorithm, $d_{max} \in \{0, 0.5, 1, 3\}$}
+\end{figure}
 
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=\textwidth]{hu_invariants_digits.png}
-%     \caption{Hu invariants for digits}
-% \end{figure}
+\clearpage
 
-% \paragraph{}
-% As for the digits, values are not similar. This is because each shape is unique in its own way.
-% It's interesting to notice that for digits $0$ and $8$, we have $hu_4 = 0$. Intuitively, that could be because the pixels for $0$ and $8$ are ``evenly'' distributed relative to their center.
+\section{Fourier descriptors vs. Chord algorithm}
+\paragraph{}
+A natural question we may ask ourselves now is: which method is better?
+Well, like in most Computer Science questions, the answer is the same: it depends.
+Let's have a look at how each method can be used to describe the contour of a shape:
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth/2-50pt]{methods_carre.png}
+    \includegraphics[width=\textwidth/2-50pt]{methods_rectangle.png}
+    \includegraphics[width=\textwidth/2-50pt]{methods_triangle.png}
+    \includegraphics[width=\textwidth/2-50pt]{methods_patate.png}
+    \includegraphics[width=\textwidth/2-50pt]{methods_croix.png}
+    \includegraphics[width=\textwidth/2-50pt]{methods_cercle.png}
+    \caption{Comparison between encoding methods}
+    \label{methods-comparison}
+\end{figure}
+
+\clearpage
+
+\paragraph{}
+If we take a good look at the figures\ref{methods-comparison}, we can clearly see that the \emph{Chord Algorithm} is much better for shapes without curves.
+For example, for the square and for the rectangle, we can reduce the initial number of points to just \emph{5}!
+The same goes for triangle and the cross, where we can drastically reduce the number of points necessary.
+\paragraph{}
+Taking the rectangle as an example, the \emph{Fast Fourier Transform} method requires to keep around $90\%$ of the descriptors to be able to properly reconstruct the shape.
+However, this method is much better for shapes with many curves.
+Taking the circle as an example, the Fourier method needs just $7.5\%$ of the descriptors to be able to reconstruct the circle without any kind of problems.
+Also, for the irregular shape (``patate''), we are able to construct a much \emph{smoother} shape contour than by using the Chord algorithm.
+Therefore, depending on our needs and on the shapes we're working with, both methods might bring advantages and disadvantages.
