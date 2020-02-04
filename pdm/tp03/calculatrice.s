@@ -10,66 +10,74 @@
 .global _start
 
 _start:
-    xor %rcx, %rcx
-    call _read
-    // save how many bytes we read
-    mov %rax, %rcx
-    // it also contains the newline, so remove that
-    dec %rcx
-    
-    // if I read nothing
-    cmp $0, %rcx
-    je _fin
+    _read_expression:
+        xor %rcx, %rcx
+        call _read
+        // save how many bytes we read
+        mov %rax, %rcx
+        // it also contains the newline, so remove that
+        dec %rcx
+        
+        // if I read nothing
+        cmp $0, %rcx
+        je _read_done
 
-    mov $BUFFER, %r10
-    _parse:
-        // check the current value
+        mov $BUFFER, %r11
         _test_add:
-            cmpb $'+', (%r10)
+            cmpb $'+', (%r11)
             jne _test_sub
             call _add
             add $16, %rsp
             push %rax
+            jmp _read_expression
         _test_sub:
-            cmpb $'-', (%r10)
+            cmpb $'-', (%r11)
             jne _test_multiplication
             call _sub
             add $16, %rsp
             push %rax
+            jmp _read_expression
         _test_multiplication:
-            cmpb $'*', (%r10)
+            cmpb $'*', (%r11)
             jne _test_division
             call _multiplication
             add $16, %rsp
             push %rax
+            jmp _read_expression
         _test_division:
-            cmpb $'/', (%r10)
-            jne _test_digit
+            cmpb $'/', (%r11)
+            jne _is_a_number
             call _division
             add $16, %rsp
             push %rax
+            jmp _read_expression
 
-        _test_digit:
-            cmpb $'0', (%r10)
-            jng _continue_parse
-            cmpb $'9', (%r10)
-            jg _continue_parse
-            // if I passed these checks, I have a digit here, so push it on the stack
+        _is_a_number:
+            // if I reached this point, then I have a number
+            // I form the number in r12
+            xor %r12, %r12
+            mov $10, %r10
+            _build_number:
+                movb (%r11), %bl
+                mov $48, %r13
+                // digit = char - '0'
+                sub %r13, %rbx
 
-            xor %rbx, %rbx
-            movb (%r10), %bl
-            mov $48, %r12
-            sub %r12, %rbx
+                imul %r10, %r12
+                add %rbx, %r12
 
-            // push this value to the stack
-            push %rbx
+                // next digit
+                inc %r11
+                loop _build_number
+        
+            // parse is done
+            push %r12
+            xor %r12, %r12
+            jmp _read_expression
 
-    _continue_parse:
-        inc %r10
-        loop _parse
-
-    call _print
-    jmp _fin
+    _read_done:
+        call _print
+        jmp _fin
 
 _add:
     push %rbp
@@ -128,6 +136,7 @@ _division:
 
     mov 16(%rbp), %rbx
     mov 24(%rbp), %rax
+    xor %rdx, %rdx
     idiv %rbx, %rax
 
     movq %rbp, %rsp
@@ -171,6 +180,9 @@ _print:
 
         cmp $0, %rax
         jnz _parse_number
+
+    movb $'\n', (%rbx)
+    inc %rcx
 
     mov $4, %rax
     mov $1, %rbx
