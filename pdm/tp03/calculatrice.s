@@ -3,7 +3,7 @@
         .space 20
 
     DMAX:
-        .long 10
+        .long 20
 
 .text
 
@@ -135,17 +135,47 @@ _division:
     ret
 
 _print:
-    // print the top of the stack
+    // print the top of the previous stack
     push %rbp
     movq %rsp, %rbp
 
-    mov 16(%rbp), %r10
+    mov 16(%rbp), %rax
+    xor %rdx, %rdx
+    xor %rcx, %rcx
 
-    mov $4, %eax
-    mov $1, %ebx
-    mov $BUFFER, %ecx
-    movb $'8', %cl
-    mov $1, %edx
+    mov $10, %r10
+
+    xor %r11, %r11
+    _invert_number:
+        xor %rdx, %rdx
+        idiv %r10, %rax
+
+        imul %r10, %r11
+        add %rdx, %r11
+
+        cmp $0, %rax
+        jnz _invert_number
+
+    mov %r11, %rax
+
+    mov $BUFFER, %rbx
+    xor %rcx, %rcx
+    _parse_number:
+        // modulo is in %rdx
+        xor %rdx, %rdx
+        idiv %r10, %rax
+        movb %dl, (%rbx)
+        addb $'0', (%rbx)
+        inc %rbx
+        inc %rcx
+
+        cmp $0, %rax
+        jnz _parse_number
+
+    mov $4, %rax
+    mov $1, %rbx
+    mov %rcx, %rdx
+    mov $BUFFER, %rcx
     int $0x80
 
     movq %rbp, %rsp
