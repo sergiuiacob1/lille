@@ -1,0 +1,27 @@
+Information:
+    - Ça marche avec nombres avec n'importe quoi chiffres, pas seulement avec nombres avec une seul chiffre
+    - Il marche aussi avec nombres negatifs
+    - L'expression est fini quand l'utilisateur donne "newline", sauf un nombre ou une opération arithmétique
+
+Construction:
+as --gstabs -o calculatrice.o calculatrice.s && ld -o calculatrice calculatrice.o
+
+Tester:
+Par example, tester: 2 * (-3) * (-100) / 2 - 97 + (3/2) = 204
+
+./calculatrice
++2
+-3
+*
+-100
+*
+2
+/
++97
+-
+3
+2
+/
++
+
+Ça vraiment donne le bon resultat: 204
