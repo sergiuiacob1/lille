@@ -1,0 +1,12 @@
+\subsection{Limits and acknowledgements}
+\paragraph{}
+In order to achieve a ``perfect'' binary image, one must properly set the threshold for the pixels' values. In this report, we did that by hand, which is not ideal, especially given the fact that we would most likely want to work with many images. Therefore, developing an algorithm for setting this threshold would be ideal. It should automatically detect the value for which the ``level of noise'' is minimum. How we'd define the latter is, as well, a problem of discussion.
+
+\paragraph{}
+Taking advantage of the methods presented in this report, one is now able to code and decode a shape's contour with ease.
+Shapes that resemble a sequence of concatenated segments can be drastically simplified with the Chord algorithm and irregular shapes can be ``smoothened'' using the Fourier method.
+Nevertheless, both methods can be used to simplify the shapes in some way.
+\paragraph{}
+We may even state that we're able to do some kind of ``shape compression'', for example by only saving the non-zero Fourier descriptors (for the first method), and only the points resulted from the Chord algorithm (for the second one).
+We can further take advantage of the parametrisation of the methods (i.e. \emph{ratio} and $d_{max}$) to best suit our needs.
+In conclusion, these allow us to now work with a shape's contour.
