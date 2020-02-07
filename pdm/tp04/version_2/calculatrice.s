@@ -39,7 +39,9 @@ main:
 
             // if the character before was a digit, push number to stack
             dec %rbx
-            push (%bx)
+            xor %rax, %rax
+            movb (%rbx), %al
+            push %rax
             inc %rbx
             call _test_if_digit
             cmp $1, %rax
@@ -63,9 +65,11 @@ main:
             // if I have '+' or '-' followed by a digit
             // then this is the sign for the next number
             cmpb $'+', (%rbx)
-            jne _maybe_minus
+            jne _maybe_minus_sign
                 // ok I have '+', is the next char a digit?
-                pushb 1(%rbx)
+                xor %rax, %rax
+                movb 1(%rbx), %al
+                push %rax
                 call _test_if_digit
                 cmp $1, %rax
                 // if not a digit, then it is not a sign for the number
@@ -75,10 +79,12 @@ main:
                     mov $1, %r12
                     jmp _continue_parse
 
-            _maybe_minus:
+            _maybe_minus_sign:
                 cmpb $'-', (%rbx)
                 jne _not_sign_for_number
-                pushb 1(%rbx)
+                xor %rax, %rax
+                movb 1(%rbx), %al
+                push %rax
                 call _test_if_digit
                 cmp $1, %rax
                 jne _not_sign_for_number
@@ -89,13 +95,15 @@ main:
 
             _not_sign_for_number:
                 // do I have a digit right now?
-                pushb (%rbx)
+                xor %rax, %rax
+                movb (%rbx), %al
+                push %rax
                 call _test_if_digit
                 cmp $1, %rax
                 jne _maybe_add
                     // yes, it is a digit
                     xor %rdx, %rdx
-                    movb (%rbx), %dx
+                    movb (%rbx), %dl
                     mov $48, %r14
                     // digit = char - '0'
                     sub %r14, %rdx
@@ -144,7 +152,7 @@ main:
 
         _continue_parse:
             inc %rbx
-            loop %rcx
+            loop _parse
 
     call _print
     jmp _fin
@@ -159,11 +167,11 @@ _test_if_digit:
     xor %rax, %rax
 
     // check
-    movb 16(%rbp), %r15
+    mov 16(%rbp), %r15
     // it has to be between '0' and '9' in order for it to be a digit
-    cmpb $'0', %r15
+    cmpb $'0', %r15b
     jl _test_if_digit_return
-    cmpb $'9', %r15
+    cmpb $'9', %r15b
     jg _test_if_digit_return
 
     // if I passed the tests above, it is a digit
