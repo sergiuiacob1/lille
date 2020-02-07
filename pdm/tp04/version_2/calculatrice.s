@@ -11,8 +11,9 @@
 .global main
 
 main:
-    push $1234
-    jmp _print
+    push $3214
+    call _print
+    jmp _fin
 
 _read:
     push %rbp

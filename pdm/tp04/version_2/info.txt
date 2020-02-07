@@ -1,0 +1,2 @@
+Compile and run:
+gcc -no-pie func.c calculatrice.s && ./a.out
