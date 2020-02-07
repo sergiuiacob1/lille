@@ -1,19 +1,178 @@
 .data
     BUFFER:
-        .space 20
+        .space 256
     INVERSED:
-        .space 20
+        .space 256
     DMAX:
-        .long 20
+        .long 255
 
 .text
 
 .global main
 
 main:
-    push $3214
+    // read the whole expression in BUFFER
+    call _read
+    // check how much I read
+    mov %rax, %rcx
+    // decrease 1 (newline)
+    sub $1, %rcx
+    cmp $0, %rcx
+    // if I read nothing, finish program
+    jng _fin
+
+    // parse expression
+    // build numbers in r11
+    // r12 for the sign
+    xor %r11, %r11
+    mov $1, %r12
+    mov $10, %r10
+    mov $BUFFER, %rbx
+
+    _parse:
+        // if I have a space and the character before was a digit
+        // then push number to stack
+        // otherwise, continue parse
+
+        cmpb $' ', (%rbx)
+        jne _not_space
+
+            // if the character before was a digit, push number to stack
+            dec %rbx
+            push (%bx)
+            inc %rbx
+            call _test_if_digit
+            cmp $1, %rax
+            // if it wasn't a digit, just continue
+            jne _continue_parse
+
+            // it was a digit, so push current number to stack
+            // multiply it by the sign
+            mov %r11, %rax
+            imul %r12, %rax
+            push %rax
+
+            // reset for next number
+            xor %r11, %r11
+            // positive by default
+            mov $1, %r12
+            
+            jmp _continue_parse
+
+        _not_space:
+            // if I have '+' or '-' followed by a digit
+            // then this is the sign for the next number
+            cmpb $'+', (%rbx)
+            jne _maybe_minus
+                // ok I have '+', is the next char a digit?
+                pushb 1(%rbx)
+                call _test_if_digit
+                cmp $1, %rax
+                // if not a digit, then it is not a sign for the number
+                jne _not_sign_for_number
+                    // it is a + followed by a digit
+                    // set positive sign
+                    mov $1, %r12
+                    jmp _continue_parse
+
+            _maybe_minus:
+                cmpb $'-', (%rbx)
+                jne _not_sign_for_number
+                pushb 1(%rbx)
+                call _test_if_digit
+                cmp $1, %rax
+                jne _not_sign_for_number
+                    // it is a minus
+                    mov $-1, %r12
+                    jmp _continue_parse
+
+
+            _not_sign_for_number:
+                // do I have a digit right now?
+                pushb (%rbx)
+                call _test_if_digit
+                cmp $1, %rax
+                jne _maybe_add
+                    // yes, it is a digit
+                    xor %rdx, %rdx
+                    movb (%rbx), %dx
+                    mov $48, %r14
+                    // digit = char - '0'
+                    sub %r14, %rdx
+
+                    imul %r10, %r11
+                    add %rdx, %r11
+                    jmp _continue_parse
+
+                _maybe_add:
+                    cmpb $'+', (%rbx)
+                    jne _maybe_minus
+                        // call add
+                        pop %rdi
+                        pop %rsi
+                        call _add
+                        push %rax
+                        jmp _continue_parse
+                _maybe_minus:
+                    cmpb $'-', (%rbx)
+                    jne _maybe_multiplication
+                        // call sub
+                        pop %rdi
+                        pop %rsi
+                        call _sub
+                        push %rax
+                        jmp _continue_parse
+                _maybe_multiplication:
+                    cmpb $'*', (%rbx)
+                    jne _maybe_division
+                        // call multiplication
+                        pop %rdi
+                        pop %rsi
+                        call _multiplication
+                        push %rax
+                        jmp _continue_parse
+                _maybe_division:
+                    cmpb $'/', (%rbx)
+                    jne _continue_parse
+                        // call division
+                        pop %rdi
+                        pop %rsi
+                        call _division
+                        push %rax
+                        jmp _continue_parse                                                
+
+
+        _continue_parse:
+            inc %rbx
+            loop %rcx
+
     call _print
     jmp _fin
+
+_test_if_digit:
+    // returns 1 in rax if the character received as parameter is a digit
+    // 0 otherwise
+    push %rbp
+    movq %rsp, %rbp
+
+    // consider it is not a digit by default
+    xor %rax, %rax
+
+    // check
+    movb 16(%rbp), %r15
+    // it has to be between '0' and '9' in order for it to be a digit
+    cmpb $'0', %r15
+    jl _test_if_digit_return
+    cmpb $'9', %r15
+    jg _test_if_digit_return
+
+    // if I passed the tests above, it is a digit
+    mov $1, %rax
+
+    _test_if_digit_return:
+    movq %rbp, %rsp
+    pop %rbp
+    ret
 
 _read:
     push %rbp
