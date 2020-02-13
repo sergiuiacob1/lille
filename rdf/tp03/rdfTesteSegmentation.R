@@ -39,26 +39,68 @@ if (interactive ()) {
   display (binaire, "image binaire", method="raster", all=TRUE)
 }
 
+buildHistogram <- function (nom, nbins){
+  image <- rdfReadGreyImage (nom)
+  h <- hist (as.vector (image), breaks = seq (0, 1, 1 / nbins), main = nom)
+}
+
+buildHistogram("rdf-2-classes-texture-1.png", 256)
+
 buildBinaryImage <- function(nom, threshold){
   image <- rdfReadGreyImage (nom)
   binaire <- (image - threshold) >= 0
+  # a "trick" to make the error calculation more precise
+  bin_1 = sum(binaire)
+  bin_0 = dim(binaire)[1] * dim(binaire)[2] - bin_1
+  if (bin_0 < bin_1)
+    binaire = 1 - binaire
+  
   # reference image
   reference <- rdfReadGreyImage ("rdf-masque-ronds.png")
-  # "normalizing" the way the pixels are classified in the images
-  binaire <- binaire != 0
-  reference <- reference != 1
-  # error
-  error <- sum(binaire != reference)/(dim(binaire)[1] * dim(binaire)[2])
-  error <- round (error, 5) * 100
   # results
+  error = sum(binaire != reference) / (dim(reference)[1] * dim(reference)[2])
+  error = round (error, 4) * 100
   info <- sprintf("%s\nthreshold=%s\nerror=%s%%", nom, threshold, error)
   if (interactive()){
     display (binaire, "image binaire", method="raster", all=TRUE)
-    # legend(x=0, y=50, info, box.col = "lightblue", bg = "lightblue",
-    #        title.adj=c(0,0))
-    legend(0, dim(binaire)[2]/2, "Some text", box.col = "lightblue", bg = "lightblue", adj=c(0.5, 0),
-           xjust=1)
+    legend(x=0.5, y=dim(binaire)[2]/2, info, bg = "lightgreen", box.col = "lightgreen", yjust=0.5)
   }
 }
 
-buildBinaryImage("rdf-2-classes-texture-2.png", 0.41)
+buildBinaryImage("rdf-2-classes-texture-4.png", 0.48)
+
+
+buildTextureHistograms <- function (nom, taille){
+  image <- rdfReadGreyImage (nom)
+  image <- rdfTextureEcartType(image, taille)
+  h <- hist (as.vector (image), breaks = seq (0, 1, 1 / nbins), main = nom)
+}
+
+buildTextureHistograms("rdf-2-classes-texture-0.png", 5)
+
+
+buildBinaryTextureImage <- function (nom, taille, threshold){
+  image <- rdfReadGreyImage (nom)
+  image <- rdfTextureEcartType(image, taille)
+  
+  binaire <- (image - threshold) >= 0
+  # a "trick" to make the error calculation more precise
+  bin_1 = sum(binaire)
+  bin_0 = dim(binaire)[1] * dim(binaire)[2] - bin_1
+  if (bin_0 < bin_1)
+    binaire = 1 - binaire
+  
+  # reference image
+  reference <- rdfReadGreyImage ("rdf-masque-ronds.png")
+  # results
+  error = sum(binaire != reference) / (dim(reference)[1] * dim(reference)[2])
+  error = round (error, 4) * 100
+  info <- sprintf("%s\nthreshold=%s\nerror=%s%%", nom, threshold, error)
+  if (interactive()){
+    display (binaire, "image binaire", method="raster", all=TRUE)
+    legend(x=0.5, y=dim(binaire)[2]/2, info, bg = "lightgreen", box.col = "lightgreen", yjust=0.5)
+  }
+}
+
+buildBinaryTextureImage("rdf-2-classes-texture-0.png", 1, 0.5)
+
