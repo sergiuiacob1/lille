@@ -67,6 +67,7 @@ If we were to use, for example, only $10$ bins, that would give the number of pi
 \label{experiment-thresholding}
 Based on the histograms above \ref{fig-histograms}, we may have our first attempt at a simple form of \emph{image segmentation}.
 By picking the gray value at which (as explained in the figure below), we can classify the pixels on the left as being part of objects, and the others on the right as being part of the background.
+\cite{lille_rdf_course}
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.5]{threshold_explanation.png}
@@ -139,9 +140,9 @@ We could therefore say that the current pixel is a \emph{border} between an obje
 \paragraph{}
 To calculate this, we first select the \emph{neighbourhood size} we want to work with.
 That will represent the number of nearby pixels we'll take into consideration when calculating the standard deviation.
-A neighbourhood size of $4$ will give us a square of $5x5$, since the square will be centered in our original pixel.
+A neighbourhood size of $2$ will give us a square of $(2*2+1)$x$(2*2+1)$, so $5$x$5$, since the square will be centered in our original pixel.
 From there on, we'll just ``sweep a neighbourhood window'' over each pixel to calculate the average gray level.
-This can be done with the help of the \emph{filter2()} function from R, which uses fast 2D FFT convolution product. \cite{r_filter2_doc}
+This can be done with the help of the \emph{filter2()} function from R, which uses fast 2D FFT convolution product. \cite{r_documentation}
 
 \begin{lstlisting}[language=R, caption=Calculating a pixel's average value]
     # Moyennage d'une image
@@ -155,7 +156,7 @@ This can be done with the help of the \emph{filter2()} function from R, which us
 \end{lstlisting}
 
 \paragraph{}
-Taking a quick look at the results of the function \emph{rdfMoyenneImage}, with a neighbourhood size of $5$, we can say that it applies a ``blur'' over the image.
+Taking a quick look at the results of the function \emph{rdfMoyenneImage}, with a neighbourhood size of $2$ (a square of $5x5$ pixels), we can say that it applies a ``blur'' over the image.
 That helps reducing the noise.
 
 \begin{figure}[h]
@@ -165,8 +166,8 @@ That helps reducing the noise.
     \includegraphics[width=\textwidth/4]{blur2.png}
     \includegraphics[width=\textwidth/4]{blur3.png}
     \includegraphics[width=\textwidth/4]{blur4.png}
-    \caption{Result of filter2() function}
-    \label{}
+    \caption{Result of rdfMoyenneImage() function}
+    \label{fig-blur-images}
 \end{figure}
 
 \clearpage
@@ -188,14 +189,14 @@ Observation: the image is normalised to have values between $0$ and $1$, since w
 \end{lstlisting}
 
 \subsection{Histograms of texture levels}
-Applying the methods above (neighbourhood size = $4$), we can build the following histograms of texture levels:
+Applying the methods above (neighbourhood size=$2$), we can build the following histograms of texture levels:
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth/3]{texture_levels_0.png}
-    \includegraphics[width=\textwidth/3]{texture_levels_1.png}
-    \includegraphics[width=\textwidth/3]{texture_levels_2.png}
-    \includegraphics[width=\textwidth/3]{texture_levels_3.png}
-    \includegraphics[width=\textwidth/3]{texture_levels_4.png}
+    \includegraphics[width=\textwidth/3-10pt]{texture_levels_0.png}
+    \includegraphics[width=\textwidth/3-10pt]{texture_levels_1.png}
+    \includegraphics[width=\textwidth/3-10pt]{texture_levels_2.png}
+    \includegraphics[width=\textwidth/3-10pt]{texture_levels_3.png}
+    \includegraphics[width=\textwidth/3-10pt]{texture_levels_4.png}
     \caption{Histograms of gray values for each texture}
     \label{}
 \end{figure}
@@ -220,3 +221,63 @@ However, this is still far from perfect, especially for the first texture, where
 \paragraph{}
 As a conclusion for this experiment, it seems like what ``gray thresholding'' does bad, ``texture thresholding'' does good and viceversa.
 Given this, it might be a good idea to try and combine the two methods.
+
+\clearpage
+
+\section{Combining gray and texture levels}
+\subsection{Conjoint Histograms}
+\paragraph{}
+A useful tool when working with images are \emph{conjoint histograms}: \cite{wiki_conjoint_histograms}
+These help us analyse the difference between images.
+We can create these histograms by using the original gray images and the ones we derived using the standard deviation. \ref{fig-blur-images}
+
+\begin{lstlisting}[language=R, caption=Calculating conjoint histograms]
+    # Calcul de l'histogramme 2D (log + normalise) de deux images
+    rdfCalculeHistogramme2D <- function (image1, bins1, image2, bins2) {
+        # Bins dans les deux images
+        indices1 = findInterval (image1, seq (0, 1, 1 / bins1))
+        indices2 = findInterval (image2, seq (0, 1, 1 / bins2))
+        # Tableau de contingence
+        counts <- table (indices1, indices2)
+        # Extension en tableau 2D incluant les valeurs nulles
+        liste <- as.data.frame (counts)
+        h2d <- array (0, c (bins1, bins2))
+        h2d[cbind (liste[,1], liste[,2])] <- liste[,3]
+        # Passage en log
+        h2d <- log (1 + h2d)
+        # normalise pour maximum a 1
+        as.Image (h2d / max (h2d))
+    }
+\end{lstlisting}
+
+\paragraph{}
+The \emph{findInterval()} function assigns each image pixel to its corresponding bin in the context of the single dimension histogram.
+In our case, the number of bins will be $256$ for both.
+Afterwards, the \emph{table()} function helps us build a \emph{contingency table} that we can use to build our resulted gray image. \cite{r_documentation}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth/3 - 10pt]{conjoint_0.png}
+    \includegraphics[width=\textwidth/3 - 10pt]{conjoint_1.png}
+    \includegraphics[width=\textwidth/3 - 10pt]{conjoint_2.png}
+    \includegraphics[width=\textwidth/3 - 10pt]{conjoint_3.png}
+    \includegraphics[width=\textwidth/3 - 10pt]{conjoint_4.png}
+    \caption{Conjoint histograms for the textures}
+\end{figure}
+
+\paragraph{}
+Our goal right now is to combine the two image attributes described above (the gray and the texture levels) to properly do the binary segmentation.
+We can build a third gray image on which we will apply the thresholding method we described earlier.
+For the third image, each pixel will have the following value:
+\label{eq-linear-combination}
+$$C_{ij} = a * G_{ij} + b * T_{ij}$$
+where $C$ is our resulted image, $G$ is our gray image and $T$ our texture image.
+
+\paragraph{}
+Afterwards, we can normalise this image $C_{ij} = C_{ij}/\max(C)$ to obtain a gray one in which we can analyse the gray values histogram.
+Looking at that histogram, we'll choose the threshold and finally do the binary segmentation.
+
+\subsection{Finding the linear combination between $G$ and $T$}
+\paragraph{}
+In the equation above \ref{eq-linear-combination}, $a$ and $b$ correspond to the parameters of a line equation.
+The line that those parameters represent may be the line that best separates the ``conglomerations'' of white pixels in our conjoint histogram.
+

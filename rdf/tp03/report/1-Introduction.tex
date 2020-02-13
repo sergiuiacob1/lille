@@ -6,15 +6,12 @@ Therefore, this is a way of summarizing a series of observations and experiments
 
 \section{Motivation}
 \paragraph{}
-Shapes are everywhere and of many kinds. Bigger, smaller, rotated, symmetric or not and so on. But what about their contours?
-How would we know how exactly to draw such a shape? This is the motivation behind trying to code and decode a \emph{shape's contour},
-so one may easily reconstruct such a shape or, often times very important, \emph{simplify} them.
+In order to be able to work with shapes, we must first acquire them.
+Most of the time, they are not given to us in their simplest form, but found in images with all kinds of backgrounds.
+They must be extracted as precisely as possible, making sure we differentiate them from the background as accurately as we can.
+Where there's a need for great precision and accuracy, there's also a need for research, so in this report we'll be looking over some methods we can use to identify objects (shapes).
 
 \section{Goals}
 \paragraph{}
-Suppose we have multiple shapes $S_1, \dots, S_n$, each shape $S_i$ described by the \emph{outer points} of its contour.
-We need to come up with ways to code these points and also simplify them, that is to reduce the number of points.
-That would allow us to reduce the memory needed to serialise these shapes, but at the cost of precision.
-\label{trade-off}
-Therefore, if we can somehow \emph{adjust} the trade-off between simplicity and precision,
-we would have a rather versatile method to work with shape contours that could fit our needs, based on the context we find ourselves in.
+Having multiple grayscale images, we want to be able to do a \emph{binary segmentation} on them in order to differentiate between the objects and the image's background.
+Given the fact that we only have gray values at our disposal, we must look into ways of using them in order to state that a certain pixel belongs to either an object or to the background.

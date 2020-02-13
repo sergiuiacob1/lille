@@ -63,12 +63,24 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{9}{section*.27}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}Conclusion}{10}{chapter.3}% 
+\contentsline {section}{\numberline {2.4}Combining gray and texture levels}{10}{section.2.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.0.1}Limits and acknowledgements}{10}{subsection.3.0.1}% 
+\contentsline {subsection}{\numberline {2.4.1}Conjoint Histograms}{10}{subsection.2.4.1}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{10}{section*.28}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{10}{section*.29}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{10}{section*.30}% 
+\contentsline {paragraph}{}{11}{section*.31}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{11}{section*.32}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.4.2}Finding the linear combination between $G$ and $T$}{11}{subsection.2.4.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{11}{section*.33}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {3}Conclusion}{12}{chapter.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{12}{section*.34}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{12}{section*.35}% 
