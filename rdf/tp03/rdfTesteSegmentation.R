@@ -125,15 +125,11 @@ for (i in 0:4){
   dev.off()
 }
 
-buildConjointHistogram <- function(nom, vala, valb){
-  grayImg <- rdfReadGreyImage(nom)
-  textureImg <- rdfTextureEcartType(grayImg, 2)
+buildConjointHistogramLine <- function(grayImg, textureImg, vala, valb){
   res = rdfCalculeHistogramme2D(grayImg, 256, textureImg, 256)
   display (res, "combination", method="raster", all=TRUE)
   abline(a = vala, b = valb, col = 6)
   legend(x=0.5, y=dim(res)[2]/2, sprintf("a=%f\nb=%f", vala, valb), bg = "lightgreen", box.col = "lightgreen", yjust=0.5)
-  
-  res
 }
 
 # for (i in 0:4){
@@ -142,18 +138,6 @@ buildConjointHistogram <- function(nom, vala, valb){
 #   dev.off()
 # }
 
-
-
-
-buildFinalGrayHistogram <- function (nom, a, b){
-  grayImg <- rdfReadGreyImage(nom)
-  textureImg <- rdfTextureEcartType(grayImg, 2)
-  final <- a * grayImg + b * textureImg
-  # normalize
-  final <- final / max(final)
-  h <- hist (as.vector (final), breaks = seq (0, 1, 1 / 256), main = nom)
-  final
-}
 
 buildFinalSegmentation <- function (nom, image, threshold){
   binaire <- (image - threshold) >= 0
@@ -176,9 +160,18 @@ buildFinalSegmentation <- function (nom, image, threshold){
 }
 
 
-a <- 120
-b <- -0.4
-nom <- "rdf-2-classes-texture-2.png"
-hist <- buildConjointHistogram(nom, a, b)
-img <- buildFinalGrayHistogram(nom, a, b)
-buildFinalSegmentation(nom, img, 0.6)
+# a <- 120
+# b <- -0.4
+
+nom <- "rdf-2-classes-texture-3.png"
+grayImg <- rdfReadGreyImage(nom)
+textureImg <- rdfTextureEcartType(grayImg, 2)
+a <- 50
+b <- 0
+buildConjointHistogramLine(grayImg, textureImg, a, b)
+final <- a * grayImg + b * textureImg
+final <- final + max(abs(final))
+final <- final/max(final)
+display(final, method="raster", all=TRUE)
+h <- hist (as.vector (final), breaks = seq (0, 1, 1/ 256), main = nom)
+buildFinalSegmentation(nom, final, 0.7)
