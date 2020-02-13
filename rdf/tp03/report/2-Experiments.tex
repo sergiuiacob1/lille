@@ -36,7 +36,7 @@ These will be loaded and converted to gray images:
 \clearpage
 
 \section{Gray levels}
-\subsection{Gray values histogram}
+\subsection{Gray values histograms}
 \paragraph{}
 A first good step would be taking a look at how the gray values are distributed. We can use a \emph{histogram} for this.
 \begin{lstlisting}[language=R, caption=Creating histograms of gray values]
@@ -64,6 +64,7 @@ If we were to use, for example, only $10$ bins, that would give the number of pi
 
 \subsection{Thresholding based on gray values}
 \paragraph{}
+\label{experiment-thresholding}
 Based on the histograms above \ref{fig-histograms}, we may have our first attempt at a simple form of \emph{image segmentation}.
 By picking the gray value at which (as explained in the figure below), we can classify the pixels on the left as being part of objects, and the others on the right as being part of the background.
 \begin{figure}[h]
@@ -113,12 +114,12 @@ Our lowest error will be achieved by setting the threshold to either $0$ or $1$,
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth/3]{texture_0_threshold.png}
-    \includegraphics[width=\textwidth/3]{texture_1_threshold.png}
-    \includegraphics[width=\textwidth/3]{texture_2_threshold.png}
-    \includegraphics[width=\textwidth/3]{texture_3_threshold.png}
-    \includegraphics[width=\textwidth/3]{texture_4_threshold_1.png}
-    \includegraphics[width=\textwidth/3]{texture_4_threshold_2.png}
+    \includegraphics[width=\textwidth/3]{gray_thresholding_0.png}
+    \includegraphics[width=\textwidth/3]{gray_thresholding_1.png}
+    \includegraphics[width=\textwidth/3]{gray_thresholding_2.png}
+    \includegraphics[width=\textwidth/3]{gray_thresholding_3.png}
+    \includegraphics[width=\textwidth/3]{gray_thresholding_4_1.png}
+    \includegraphics[width=\textwidth/3]{gray_thresholding_4_2.png}
     \caption{Image segmentation based on gray threshold}
 \end{figure}
 
@@ -127,16 +128,22 @@ We can conclude this experiment by saying that this method will not suffice, esp
 Even for the simple textures we still have some missclassified pixels, as it's hard (or often times impossible) to get the right threshold for a perfect segmentation.
 It is intuitive that the single white pixels (for example for the second texture) surrounded by black pixels should also be part of the background, so next we'll focus on trying to use a pixel's neighbours to gain more information.
 
+\clearpage
 
 \section{Texture levels}
-\section{Histograms of texture levels}
+\subsection{Calculating texture levels}
 \paragraph{}
 We can define a pixel's \emph{texture level} as being the standard deviation of the gray levels for the pixels located in a square neighborhood.
-Firstly, we select the \emph{neighbourhood size} we want to work with.
+Intuitively, a big value for the standard deviation will mean that the nearby pixels have very different gray values.
+We could therefore say that the current pixel is a \emph{border} between an object and the background.
+\paragraph{}
+To calculate this, we first select the \emph{neighbourhood size} we want to work with.
+That will represent the number of nearby pixels we'll take into consideration when calculating the standard deviation.
+A neighbourhood size of $4$ will give us a square of $5x5$, since the square will be centered in our original pixel.
 From there on, we'll just ``sweep a neighbourhood window'' over each pixel to calculate the average gray level.
-This can be done with the help of fast 2D FFT convolution product, as described in the \emph{filter2()} function documentation.
+This can be done with the help of the \emph{filter2()} function from R, which uses fast 2D FFT convolution product. \cite{r_filter2_doc}
 
-\begin{lstlisting}[language=R, caption=Calculating the texture levels]
+\begin{lstlisting}[language=R, caption=Calculating a pixel's average value]
     # Moyennage d'une image
     rdfMoyenneImage <- function (image, taille) {
         # cote du masque = 2 *taille + 1
@@ -145,7 +152,30 @@ This can be done with the help of fast 2D FFT convolution product, as described 
         # image filtree
         filter2 (image, masque)
     }
+\end{lstlisting}
 
+\paragraph{}
+Taking a quick look at the results of the function \emph{rdfMoyenneImage}, with a neighbourhood size of $5$, we can say that it applies a ``blur'' over the image.
+That helps reducing the noise.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth/4]{blur0.png}
+    \includegraphics[width=\textwidth/4]{blur1.png}
+    \includegraphics[width=\textwidth/4]{blur2.png}
+    \includegraphics[width=\textwidth/4]{blur3.png}
+    \includegraphics[width=\textwidth/4]{blur4.png}
+    \caption{Result of filter2() function}
+    \label{}
+\end{figure}
+
+\clearpage
+
+\paragraph{}
+Afterwards, we just follow the formula for the standard deviation for each pixel.
+Observation: the image is normalised to have values between $0$ and $1$, since we're working with gray values.
+
+\begin{lstlisting}[language=R, caption=Calculating a pixel's average value]
     # Ecart type normalise des voisinages carres d'une image
     rdfTextureEcartType <- function (image, taille) {
         # carre de l'image moins sa moyenne
@@ -157,5 +187,36 @@ This can be done with the help of fast 2D FFT convolution product, as described 
     }
 \end{lstlisting}
 
+\subsection{Histograms of texture levels}
+Applying the methods above (neighbourhood size = $4$), we can build the following histograms of texture levels:
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth/3]{texture_levels_0.png}
+    \includegraphics[width=\textwidth/3]{texture_levels_1.png}
+    \includegraphics[width=\textwidth/3]{texture_levels_2.png}
+    \includegraphics[width=\textwidth/3]{texture_levels_3.png}
+    \includegraphics[width=\textwidth/3]{texture_levels_4.png}
+    \caption{Histograms of gray values for each texture}
+    \label{}
+\end{figure}
+
+\clearpage
+
+An interesting observation is that we now have a ``valley'' for each texture, even for the noisy ones.
+Next, we can use the same ``thresholding'' method as in our previous experiment \ref{experiment-thresholding}, but applied on the images obtained from \emph{rdfTextureEcartType()}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth/3]{texture_thresholding_0.png}
+    \includegraphics[width=\textwidth/3]{texture_thresholding_1.png}
+    \includegraphics[width=\textwidth/3]{texture_thresholding_2.png}
+    \includegraphics[width=\textwidth/3]{texture_thresholding_3.png}
+    \includegraphics[width=\textwidth/3]{texture_thresholding_4.png}
+    \caption{Thresholding based on texture}
+\end{figure}
+
 \paragraph{}
-The 
+Our biggest win here, using texture levels, is that for the last 2 textures, the segmentation works much better, due to the ``mathematical blur'' we applied by calculating the average gray values.
+However, this is still far from perfect, especially for the first texture, where our segmentation resulted in... donuts.
+\paragraph{}
+As a conclusion for this experiment, it seems like what ``gray thresholding'' does bad, ``texture thresholding'' does good and viceversa.
+Given this, it might be a good idea to try and combine the two methods.

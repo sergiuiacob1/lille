@@ -76,7 +76,7 @@ buildTextureHistograms <- function (nom, taille){
   h <- hist (as.vector (image), breaks = seq (0, 1, 1 / nbins), main = nom)
 }
 
-buildTextureHistograms("rdf-2-classes-texture-0.png", 5)
+buildTextureHistograms("rdf-2-classes-texture-0.png", 4)
 
 
 buildBinaryTextureImage <- function (nom, taille, threshold){
@@ -102,5 +102,4 @@ buildBinaryTextureImage <- function (nom, taille, threshold){
   }
 }
 
-buildBinaryTextureImage("rdf-2-classes-texture-0.png", 1, 0.5)
-
+buildBinaryTextureImage("rdf-2-classes-texture-0.png", 4, 0.5)

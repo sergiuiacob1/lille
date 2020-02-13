@@ -27,7 +27,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.2}Gray levels}{4}{section.2.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.1}Gray values histogram}{4}{subsection.2.2.1}% 
+\contentsline {subsection}{\numberline {2.2.1}Gray values histograms}{4}{subsection.2.2.1}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{4}{section*.9}% 
 \defcounter {refsection}{0}\relax 
@@ -45,20 +45,30 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{6}{section*.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.3}Texture levels}{6}{section.2.3}% 
+\contentsline {section}{\numberline {2.3}Texture levels}{7}{section.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.4}Histograms of texture levels}{7}{section.2.4}% 
+\contentsline {subsection}{\numberline {2.3.1}Calculating texture levels}{7}{subsection.2.3.1}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{7}{section*.19}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{7}{section*.20}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}Conclusion}{8}{chapter.3}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {3.0.1}Limits and acknowledgements}{8}{subsection.3.0.1}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{8}{section*.21}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{8}{section*.22}% 
+\contentsline {paragraph}{}{7}{section*.21}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{8}{section*.23}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.3.2}Histograms of texture levels}{8}{subsection.2.3.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{9}{section*.26}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{9}{section*.27}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {3}Conclusion}{10}{chapter.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.0.1}Limits and acknowledgements}{10}{subsection.3.0.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{10}{section*.28}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{10}{section*.29}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{10}{section*.30}% 
