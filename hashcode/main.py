@@ -1,7 +1,7 @@
 import os
 import math
 
-filename = 'a.txt'
+filename = 'b.txt'
 
 
 class Library:
@@ -69,7 +69,7 @@ days_left_for_signup = 0
 
 libraries_scan_order = {}
 for i in range (0, L):
-    libraries_scan_order = []
+    libraries_scan_order[i] = []
 
 signup_order = []
 
@@ -80,7 +80,7 @@ for i in range(0, D):
         if days_left_for_signup == 0:
             signup_in_process = False
 
-    if signup_in_process is False:
+    if signup_in_process is False and len(libraries_already_signed) < L:
         # choose a library for signup process
         lib, scannable_books = get_best_library_for_signup(i)
         # start signup process
@@ -105,6 +105,7 @@ for i in range(0, D):
 
     how_many_books_lib_is_scanning = [0] * L
 
+    scanned = set()
     for x in books_to_scan:
         # I want to scan the book x
         choices = list(books_to_libs[x])
@@ -115,16 +116,22 @@ for i in range(0, D):
                 # choose lib
                 how_many_books_lib_is_scanning[lib] += 1
                 libraries_scan_order[lib].append(x)
+                scanned.add(x)
+
+    for x in scanned:
+        books_to_scan.remove(x)
 
 
-filename_output = filename.split('.txt') + '_out.txt'
+filename_output = filename.split('.txt')[0] + '_out.txt'
 with open (filename_output, 'w') as f:
-    f.write (len(libraries_already_signed))
+    f.write (f'{len(libraries_already_signed)}\n')
     for x in signup_order:
-        f.write (x, len(libraries_scan_order[x]))
+        f.write (f'{x} {len(libraries_scan_order[x])}\n')
         for book in libraries_scan_order[x]:
-            f.write (book, end = ' ')
-        f.write()
+            f.write (f'{book} ')
+        f.write('\n')
+
+
 
 
 # ideas
