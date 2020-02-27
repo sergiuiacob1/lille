@@ -1,0 +1,196 @@
+\section{Loading data}
+\paragraph{}
+The image we'll try to apply binarisation to is the following:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{2classes_100_100_8bits_2016.png}
+    \caption{Image to experiment on}
+    \label{merged-image}
+\end{figure}
+
+\paragraph{}
+Which is composed of the following 2 images:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{2classes_100_100_8bits_omega1_2016.png}
+    \includegraphics{2classes_100_100_8bits_omega2_2016.png}
+    \caption{Separate images}
+    \label{separate-images}
+\end{figure}
+
+\paragraph{}
+The images will be be loaded as gray images:
+
+\begin{lstlisting}[language=R, caption=Loading data]
+    # Chargement d'une image en niveaux de gris
+    rdfReadGreyImage <- function (nom) {
+        image <- readImage (nom)
+        if (length (dim (image)) == 2) {
+            image
+        } else {
+            channel (image, 'red')
+        }
+    }   
+\end{lstlisting}
+
+
+\clearpage
+
+
+\section{Fixed threshold}
+\paragraph{}
+Taking a look at the histogram, we can have a ``manual'' attempt at binarising the image: using a \emph{fixed threshold}.
+We simply choose a value for the threshold and we assign, for each pixel, one of the predicted classes as it follows:
+$$\hat{w_1} = \{P \in I | I(P) < \hat{X}\}$$
+$$\hat{w_2} = \{P \in I | I(P) \ge \hat{X}\}$$
+where $\hat{X}$ is our threshold.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth/2]{histogram1.png}
+    \caption{Histogram of grey values for}
+    \label{}
+\end{figure}
+
+\begin{lstlisting}[language=R, caption=Using fixed threshold]
+    # for each threshold, calculate the binary image
+    # image has values between [0, 1] so our threshold has to be in the same range
+    # for each pixel, the expression (pixel_value - threshold) >= 0 will assign it to one of two classes: w1 or w2
+    binaire50 <- (image - 0.5) >= 0
+    display (binaire50, "image binaire 0.35", method="raster", all=TRUE)
+    binaire55 <- (image - 0.55) >= 0
+    display (binaire55, "image binaire 0.35", method="raster", all=TRUE)
+    binaire60 <- (image - 0.6) >= 0
+    display (binaire60, "image binaire 0.35", method="raster", all=TRUE)
+    
+\end{lstlisting}
+
+\clearpage
+
+\paragraph{}
+Let's take a look at the results, using threshold values of $0.5$, $0.55$ and $0.6$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth/3 - 10pt]{threshold_05.png}
+    \includegraphics[width=\textwidth/3 - 10pt]{threshold_055.png}
+    \includegraphics[width=\textwidth/3 - 10pt]{threshold_06.png}
+    \caption{Fixed threshold results}
+    \label{}
+\end{figure}
+
+\paragraph{}
+It is not hard to see that there is a lot of noise in our predictions and they are far from perfect.
+The threshold value of $0.6$ might seem attractive, but it only manages to classify well most of the pixels from the image on the top.
+Further more, it heavily missclassifies the pixels from the image on the bottom.
+
+\section{A priori class probabilities}
+\paragraph{}
+Our image \ref{merged-image} is formed of 2 separate images \ref{separate-images}.
+We can try to calculate the following probabilities:
+\begin{center}
+    $P(w_1)$, the probability of a pixel to be in $w_1$ class
+    \\
+    $P(w_2)$, the probability of a pixel to be in $w_1$ class
+\end{center}
+
+\paragraph{}
+Knowing that the dimension of the merged image is $100$x$100$ and the 2 images are $100$x$43$, $100$x$57$, the probabilities above are easy to calculate.
+
+\begin{lstlisting}[language=R, caption=A priori class probabilities]
+    calculateClassAPrioriProbabilities <- function(){
+    combined <- rdfReadGreyImage ("2classes_100_100_8bits_2016.png")
+    above <- rdfReadGreyImage ("2classes_100_100_8bits_omega1_2016.png")
+    below <- rdfReadGreyImage ("2classes_100_100_8bits_omega2_2016.png")
+    
+    # pw1 = (number_of_pixels_from_the_first_image) / (number_of_total_pixels)
+    # pw1 = (number_of_pixels_from_the_second_image) / (number_of_total_pixels)
+    noTotalPixels = dim(combined)[1] * dim(combined)[2]
+    pw1 = (dim(above)[1] * dim(above)[2]) / noTotalPixels
+    pw2 = (dim(below)[1] * dim(below)[2]) / noTotalPixels
+    c(pw1, pw2)
+}
+\end{lstlisting}
+
+\paragraph{}
+In this case, the probabilities are $P(w_1) = 0.57$ and $P(w_2) = 0.43$.
+
+\clearpage
+
+\section{Conditional probabilities}
+Having $P(w_1)$ and $P(w_2)$, we can take a step further and calculate the following conditional probabilities:
+\begin{center}
+    $P(X|w_1)$, the probability of a pixel having the gray value of $X$ if it's in the $w_1$ class
+    \\
+    $P(X|w_2)$, the probability of a pixel having the gray value of $X$ if it's in the $w_2$ class
+\end{center}
+
+\paragraph{}
+These are, according to \cite{bayes_theorem}, equal to:
+$$P(X|w) = \frac{P(w | X) * P(X)}{P(w)}$$
+
+\paragraph{}
+We already have $P(w)$ and $P(X)$ is simply the number of pixels with the gray value of $X$ divided by the total number of pixels.
+$P(w | X)$ is the number of pixels with the value $X$ in the image corresponding to w divided by the total number of pixels with a value of $X$.
+
+\begin{lstlisting}[language=R, caption=Calculating conditional probabilities]
+    calculateConditionalProbability <- function (X){
+        probs <- calculateClassAPrioriProbabilities()
+        nom <- "2classes_100_100_8bits_2016.png"
+        image <- rdfReadGreyImage (nom)
+        nbins <- 256
+        h <- hist (as.vector (image), freq=FALSE, breaks = seq (0, 1, 1 / nbins))
+        # we can notice that h$counts[X + 1] gives us the number of pixels that have the gray value of X
+        # the "+ 1" above is because in R arrays start from 1
+        # so, P(X | I) = the probability of a pixel from the merged image to have the gray value of X
+        px <- h$counts[X + 1] / sum(h$counts)
+        # P(X | w) = the probability of a pixel from the merged image to have the gray value of X
+        # IF that pixel is from the w class
+        # Using bayes theorem, we get:
+        # P(X|w) = (P(w | X) * P(X)) / P(w)
+        # and P(w | X) = how many pixels of value X are in the image corresponding to w / the total number of pixels with a value of X
+        
+        above <- rdfReadGreyImage ("2classes_100_100_8bits_omega1_2016.png")
+        below <- rdfReadGreyImage ("2classes_100_100_8bits_omega2_2016.png")
+        h1 <- hist (as.vector (above), freq=FALSE, breaks = seq (0, 1, 1 / nbins))
+        h2 <- hist (as.vector (below), freq=FALSE, breaks = seq (0, 1, 1 / nbins))
+        
+        p_w1_if_x <- h1$counts[X + 1] / h$counts[X + 1]
+        p_x_and_w1 <- p_w1_if_x * px
+        p_x_if_w1 <- p_x_and_w1 / probs[1]
+        p_w2_if_x <- h2$counts[X + 1] / h$counts[X + 1]
+        p_x_and_w2 <- p_w2_if_x * px
+        p_x_if_w2 <- p_x_and_w2 / probs[2]
+        c(px, p_x_if_w1, p_x_if_w2)
+    }
+\end{lstlisting}
+
+\paragraph{}
+Running the above function for $X=141$, we get the following probabilities:
+\begin{center}
+    $P(X|I) = 0.011800000$
+    \\
+    $P(X|w_1) = 0.008947368$
+    \\
+    $P(X|w_2) = 0.015581395$
+\end{center}
+where $P(X|I)$ refers to the probability of a pixel to have the gray value of $X$ in the whole (merged) image. Of course, $P(X|w_1) * P(w_1) + P(X|w_2) * P(w_2) = P(X|I)$.
+
+\clearpage
+
+\section{Automatic thresholding using Bayes}
+
+\paragraph{}
+Having a threshold $\hat{X}$, we can define an assignment error as being the following:
+$$P(\epsilon | \hat{X}) = \underset{x}{\operatorname{argmin}}
+(
+\underset{X\in\hat{w_2}}{\sum} P(X|w_1) * P(w_1)
++
+\underset{X\in\hat{w_1}}{\sum} P(X|w_2) * P(w_2)
+)
+$$
+\paragraph{}
+Our goal is to find the $\hat{X}$ that minimizes $P(\epsilon | \hat{X})$.
+For this, we can try each value for $\hat{X}$ and see which is the best.

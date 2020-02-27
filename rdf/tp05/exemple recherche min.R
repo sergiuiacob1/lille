@@ -6,7 +6,7 @@ erreur = 0:255
 minimum_erreur = 1;
 seuil_minimum_erreur = 0;
 
-for (X in 1:255) 
+for (X in 0:255) 
 {
   # (\sum_{\mathbf{X} \in \hat{\omega_2}} P(\mathbf{X} / \omega_1). P(\omega_1)  
   somme1[X+1]=2*abs(X-127)
