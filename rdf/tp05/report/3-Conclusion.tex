@@ -1,6 +1,8 @@
 \paragraph{}
-Using only the gray values or the texture values as attributes did not result in a great segmentation.
-As we've seen in the experiments, the error rate, when using each attribute individually, can be pretty high in certain cases, even though for some textures the methods are really precise.
+Bayes' theorem relieves us from having to manually search for the best threshold.
+It provided results close to what we were looking for, with low error rates.
+It can be used in a multitude of scenarios as a strong classification tool, this report presenting just one simple example.
 \paragraph{}
-However, where one of them did bad, the other did well. By combining the two, we have a more precise way of segmenting the image.
-In conclusion, we may state that the combination of the two attributes is a worthy contender for binary segmentation. 
+However, when segmenting the digits, for example, we did rely on already existing perfect segmentations in order to calculate probabilities like $P(w)$.
+Without those, Bayes' theorem could not have been applied.
+This is, however, a step in the right direction, especially coming from a method where we were manually selecting the threshold based on the histograms of gray values.

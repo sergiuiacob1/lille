@@ -61,8 +61,28 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{8}{section*.23}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}Conclusion}{9}{chapter.3}% 
+\contentsline {section}{\numberline {2.7}Segmenting digits}{8}{section.2.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{9}{section*.25}% 
+\contentsline {paragraph}{}{8}{section*.25}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{9}{section*.26}% 
+\contentsline {paragraph}{}{8}{section*.27}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{8}{section*.28}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{9}{section*.29}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{9}{section*.30}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{9}{section*.31}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{11}{section*.32}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.8}Classification error}{11}{section.2.8}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{11}{section*.35}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {3}Conclusion}{12}{chapter.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{12}{section*.36}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{12}{section*.37}% 

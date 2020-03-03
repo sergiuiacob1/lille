@@ -57,7 +57,9 @@ Please note that for the following scripts, some data was pre-loaded to avoid lo
 
 \section{Fixed threshold}
 \paragraph{}
-Taking a look at the histogram, we can have a ``manual'' attempt at binarising the image: using a \emph{fixed threshold}.
+Let's take a look at the histograms below.
+Left is for the ``merged'' image, right is for the separate images, the histograms being plotted together.
+Based on the left histogram, we can have a ``manual'' attempt at binarising the image: using a \emph{fixed threshold}.
 We simply choose a value for the threshold and we assign, for each pixel, one of the predicted classes as it follows:
 $$\hat{w_1} = \{P \in I | I(P) < \hat{X}\}$$
 $$\hat{w_2} = \{P \in I | I(P) \ge \hat{X}\}$$
@@ -65,7 +67,8 @@ where $\hat{X}$ is our threshold.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth/2]{histogram1.png}
+    \includegraphics[width=\textwidth/2 - 10pt]{histogram1.png}
+    \includegraphics[width=\textwidth/2 - 10pt]{combined_histograms.png}
     \caption{Histogram of grey values for}
     \label{}
 \end{figure}
@@ -97,7 +100,7 @@ Let's take a look at the results, using threshold values of $0.5$, $0.55$ and $0
 \end{figure}
 
 \paragraph{}
-It is not hard to see that there is a lot of noise in our predictions and they are far from perfect.
+It is not hard to see that there is a lot of noise in our predictions and that they are far from perfect.
 The threshold value of $0.6$ might seem attractive, but it only manages to classify well most of the pixels from the image on the top.
 Further more, it heavily missclassifies the pixels from the image on the bottom.
 
@@ -144,7 +147,7 @@ $$P(X|w) = \frac{P(w | X) * P(X)}{P(w)}$$
 
 \paragraph{}
 We already have $P(w)$ and $P(X)$ is simply the number of pixels with the gray value of $X$ divided by the total number of pixels.
-$P(w | X)$ is the number of pixels with the value $X$ in the image corresponding to w divided by the total number of pixels with a value of $X$.
+$P(w | X)$ is the number of pixels with the value $X$ in the merged image corresponding to $w$ divided by the total number of pixels with a value of $X$.
 
 \begin{lstlisting}[language=R, caption=Calculating conditional probabilities]
     calculateConditionalProbability <- function (X, probs){
@@ -208,13 +211,8 @@ For this, we can try each value for $\hat{X}$ and see which is the best.
         probs <- calculateClassAPrioriProbabilities()
         # only get the imageData, it will be faster for comparisons
         image <- imageData(image)
-        # calculate these dimensions only once
-        dimImage <- dim(image)
-        dimAbove <- dim(above)
-        dimBelow <- dim(below)
-        
         # build our reference segmentation
-        perfect <- matrix (ncol=dim(image)[1], nrow=dim(image)[2])
+        perfect <- matrix (nrow=dim(image)[1], ncol=dim(image)[2])
         # dim(image)[1] = number of columns
         for (i in 1:dim(image)[1])
           for (j in 1:dim(above)[2]){
@@ -226,43 +224,36 @@ For this, we can try each value for $\hat{X}$ and see which is the best.
           }
         display(perfect, method="raster", all=TRUE)
         
-        # search for the best threshold
-        # max error is (hypotethically) when all probabilities are 1 and all pixels are missclassified
-        min_error <- 2 * dimImage[1] * dimImage[2]
-        best_threshold <- 0
-        
         # precalculate all probabilities
-        condProbs <- array(dim=c(dimImage[1], dimImage[2], 3))
-        for (i in 1:dimImage[1])
-          for (j in 1:dimImage[2]){
-            res <- calculateConditionalProbability(image[i, j] * 255, probs)
-            condProbs[i, j, 1] <- res[1]
-            condProbs[i, j, 2] <- res[2]
-            condProbs[i, j, 3] <- res[3]
-          }
-            
+        condProbs <- matrix(nrow = 256, ncol = 2)
+        for (X in 0:255){
+          res <- calculateConditionalProbability(X, probs)
+          condProbs[X + 1, 1] <- res[2]
+          condProbs[X + 1, 2] <- res[3]
+        }
+        
+        min_error = 2 * dim(image)[1] * dim(image)[2]
         for (X in 0:255){
           binary <- (image - X/255) >= 0
           # only get the data, otherwise the comparisons will be really slow
           binary <- imageData(binary)
-          
           error <- 0
-          for (i in 1:dimImage[1])
-            for (j in 1:dimAbove[2])
-              if (perfect [i, j] != binary [i, j])
-                error <- error + condProbs[2] * probs[1]
-          for (i in 1:dimImage[1])
-            for (j in dimAbove[2]:dimImage[2])
-              if (perfect [i, j] != binary [i, j])
-                error <- error + condProbs[3] * probs[2]
-            
+          # these pixels should be in w1 class
+          for (i in 1:dim(image)[1])
+            for (j in 1:dim(image)[2])
+              if (perfect [i, j] != binary [i, j]){
+                # if it should be in the first class
+                if (j < dim(above)[2])
+                  error <- error + condProbs[image[i, j] * 255 + 1, 1] * probs[1]
+                else
+                  error <- error + condProbs[image[i, j] * 255 + 1, 2] * probs[2]
+              }
           if (error < min_error){
             min_error <- error
             best_threshold <- X
           }
         }
-        
-        print (c (min_error, best_threshold))
+        print (c(min_error, best_threshold))
         # segment using best_threshold
         binary <- (image - best_threshold/255) >= 0
         display(binary, method="raster", all=TRUE)
@@ -272,7 +263,7 @@ For this, we can try each value for $\hat{X}$ and see which is the best.
 \paragraph{}
 Below we can look at the ``perfect'' image and the one we got using this automatic segmentation.
 To calculate the ``perfect'' segmentation, we simply assigned all pixels from the first (above) image to a class, and the rest to another class.
-According to the script, the minimum error is $6.22581$ and the best threshold for the gray value is $X = 142$.
+According to the script, the minimum error is $1.636$ and the best threshold for the gray value is $X = 139$.
 
 \begin{figure}[h]
     \centering
@@ -281,3 +272,204 @@ According to the script, the minimum error is $6.22581$ and the best threshold f
     \caption{Perfect segmentation and our best result}
     \label{}
 \end{figure}
+
+
+\section{Segmenting digits}
+\paragraph{}
+We'll take a look now at the results of this method for some digits. We'll be working with the following images:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{rdf-chiffre-0-8bits.png}
+    \includegraphics{rdf-chiffre-0-8bits_omega1.png}
+    \includegraphics{rdf-chiffre-0-8bits_omega2.png}
+    \includegraphics{rdf-chiffre-1-8bits.png}
+    \includegraphics{rdf-chiffre-1-8bits_classe_a_trouver.png}
+    \caption{Digit images}
+    \label{}
+\end{figure}
+
+\paragraph{}
+For the $0$ digit, we have 3 images: one we need to segment and 2 already ``segmented'' photos.
+For the second and third segment, we can see that some pixels are black. Those pixels correspond to the $w_1$ and $w_2$ classes.
+We'll be using this fact for the calculation of probabilities.
+
+\paragraph{}
+Let us first load our new new data and work with the $0$ digit:
+\begin{lstlisting}[language=R, caption=Loading data for digits]
+    # get img, w1 and w2 histograms
+    image <- rdfReadGreyImage("rdf-chiffre-0-8bits.png")
+    img_w1 <- rdfReadGreyImage("rdf-chiffre-0-8bits_omega1.png")
+    img_w2 <- rdfReadGreyImage("rdf-chiffre-0-8bits_omega2.png")
+    nbins <- 256
+    h <- hist (as.vector (image), freq=FALSE, breaks = seq (0, 1, 1 / nbins))
+    h1 <- hist (as.vector (img_w1), freq=FALSE, breaks = seq (0, 1, 1 / nbins))
+    h2 <- hist (as.vector (img_w2), freq=FALSE, breaks = seq (0, 1, 1 / nbins))
+\end{lstlisting}
+
+\clearpage
+
+\paragraph{}
+To use the automatic bayes thresholding, we need to calculate $P(w)$, $P(X)$ and $P(X|w)$, so $P(w|X)$ as well.
+$P(w)$ will be equal to the number of pixels from the $w$ class (so the black pixels in the second and third images) divided by the total number of pixels.
+For $P(X)$, we simply divide the number of pixels with the gray value of $X$ to the total number of pixels.
+\paragraph{}
+$P(w|X)$ isn't that tricky.
+If, for example, the pixels of value $X$ belong to the $w_1$ class, then in the histogram for $w_1$ we won't have any $X$ values.
+That's because those pixels with the value of $X$ were given the $0$ value (black pixels).
+\paragraph{}
+So, $\frac{count_{total} - count_{w_1}} {count_{total}}$ will give us the proportion of pixels of value $X$ that were assigned to the $w_1$ class.
+We can use this to calculate $P(w|X)$. Afterwards, we can easily calculate $P(X|w)$ using Bayes' theorem.
+
+\begin{lstlisting}[language=R, caption=Automatic segmentation for digit 0]
+    classify0Digit <- function(){
+        # calculate a priori probabilities
+        # P(w) = probability of a pixel to be in the w class
+        # the pixels that are in w class have a gray value of 0 in the image corresponding to w
+        probs <- c(h1$counts[1] / sum(h$counts), h2$counts[1] / sum(h$counts))
+        
+        # only get the imageData, it will be faster for comparisons
+        image <- imageData(image)
+        img_w1 <- imageData(img_w1)
+        img_w2 <- imageData(img_w2)
+        
+        # build our reference segmentation
+        perfect <- matrix (nrow=dim(image)[1], ncol=dim(image)[2])
+        # dim(image)[1] = number of columns
+        for (i in 1:dim(image)[1])
+          for (j in 1:dim(image)[2]){
+            if (img_w1[i, j] == 0){
+              perfect[i, j] <- TRUE
+            }
+            else{
+              perfect[i, j] <- FALSE
+            }
+          }
+        display(perfect, method="raster", all=TRUE)
+        
+        # precalculate all conditional probabilities
+        condProbs <- matrix(nrow = 256, ncol = 2)
+        for (X in 0:255){
+          px <- h$counts[X + 1] / sum(h$counts)
+          # P(X | w) = probability of a pixel having the gray value of X if the pixel is from class w
+          # Using bayes theorem, we get:
+          # P(X|w) = (P(w | X) * P(X)) / P(w)
+          # P(w | X) = the prob. of the pixel being from the w class, if its value is X
+          # 
+          
+          # h1$counts[X + 1] + h2$counts[X + 1] = h$counts[X + 1]
+          # if h1$counts[X + 1] - h$counts[X + 1] is different than 0, then those pixels were NOT assigned to w1
+          
+          if (px == 0){
+            condProbs[X + 1, 1] <- 0
+            condProbs[X + 1, 2] <- 0
+            next
+          }
+          p_w1_if_x <- (h$counts[X + 1] - h1$counts[X + 1]) / h$counts[X + 1]
+          p_x_and_w1 <- p_w1_if_x * px
+          p_x_if_w1 <- p_x_and_w1 / probs[1]
+          p_w2_if_x <- (h$counts[X + 1] - h2$counts[X + 1]) / h$counts[X + 1]
+          p_x_and_w2 <- p_w2_if_x * px
+          p_x_if_w2 <- p_x_and_w2 / probs[2]
+          
+          condProbs[X + 1, 1] <- p_x_if_w1
+          condProbs[X + 1, 2] <- p_x_if_w2
+        }
+        
+        probSum <- 0
+        for (X in 0:255){
+          if(is.nan(condProbs[X + 1, 1]) == FALSE)
+            probSum <- probSum + probs[1] * condProbs[X + 1, 1] + probs[2] * condProbs[X + 1, 2]
+        }
+        
+        print ('Making sure that the sum of conditional probabilities is 1:')
+        print (probSum)
+      
+        # search for the best threshold
+        min_error <- 2 * dim(image)[1] * dim(image)[2]
+        best_threshold <- 0
+        for (X in 0:255){
+          binary <- (image - X/255) >= 0
+          # only get the data, otherwise the comparisons will be really slow
+          binary <- imageData(binary)
+          
+          error <- 0
+          for (i in 1:dim(image)[1])
+            for (j in 1:dim(image)[2])
+              if (perfect [i, j] != binary [i, j]){
+                # if it should have been in w1
+                if (img_w1[i, j] == 0)
+                  error <- error + condProbs[image[i, j] * 255 + 1, 1] * probs[1]
+                else
+                  # it should have been in w1
+                  error <- error + condProbs[image[i, j] * 255 + 1, 2] * probs[2]
+              }
+          
+          if (error < min_error){
+            min_error <- error
+            best_threshold <- X
+          }
+        }
+        print (c (min_error, best_threshold))
+        # segment using best_threshold
+        binary <- (image - best_threshold / 255) >= 0
+        display(binary, method="raster", all=TRUE)
+    }
+\end{lstlisting}
+
+\clearpage
+
+\paragraph{}
+Running the above script will give us an error of $0.04583333$, the best threshold being $X=142$.
+We also applied the same threshold for digit $1$ and we can see that it is quite a good threshold.
+The segmentation isn't perfect, but it gets the job done.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=72px]{0_segmentation.png}
+    \includegraphics[width=72px]{1_segmentation.png}
+    \caption{Automatic segmentation using best treshold for digit $0$}
+    \label{}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=72px]{0_perfect.png}
+    \includegraphics[scale=3]{rdf-chiffre-1-8bits_classe_a_trouver.png}
+    \caption{Perfect segmentation}
+    \label{}
+\end{figure}
+
+
+\section{Classification error}
+As a final conclusion, we can look at the error rate of our algorithm.
+
+\begin{lstlisting}[language=R, caption=Calculating error rate]
+    binary <- (image - best_threshold / 255) >= 0
+    # build our reference segmentation
+    perfect <- matrix (nrow=dim(image)[1], ncol=dim(image)[2])
+    # dim(image)[1] = number of columns
+    for (i in 1:dim(image)[1])
+      for (j in 1:dim(image)[2]){
+        if (img_w1[i, j] == 0){
+          perfect[i, j] <- TRUE
+        }
+        else{
+          perfect[i, j] <- FALSE
+        }
+      }
+    sprintf("Error for digit 0: %f", sum(abs(perfect - binary)) / (dim(perfect)[1] * dim(perfect)[2]))
+    
+    # calculate error rate for 1
+    image <- rdfReadGreyImage("rdf-chiffre-1-8bits.png")
+    binary <- (image - best_threshold / 255) < 0
+    perfect <- rdfReadGreyImage("rdf-chiffre-1-8bits_classe_a_trouver.png")
+    display(binary, method="raster", all=TRUE)
+    sprintf("Error for digit 1: %f", sum(abs(perfect - binary)) / (dim(perfect)[1] * dim(perfect)[2]))
+    
+\end{lstlisting}
+
+\paragraph{}
+This gave us an error rate of $0.033333$, that is around $3.3\%$ missclassified pixels for digit $0$.
+For digit $1$, we have an error of $0.029167$, so around $3\%$ missclassified pixels.
+
