@@ -38,8 +38,7 @@ calculateClassAPrioriProbabilities <- function(){
 }
 
 nbins <- 256
-hCombined <- hist (as.vector (combined), freq=FALSE, breaks = seq (0, 1, 1 / nbins), col=rgb(1,0,0,0.5),  main="combined histogram", xlab="Gray values")
-h1 <- hist (as.vector (above), freq=FALSE, breaks = seq (0, 1, 1 / nbins), col=rgb(1,0,0,1),  main="omega1&omega2 histograms", xlab="Gray values")
+h1 <- hist (as.vector (above), freq=FALSE, breaks = seq (0, 1, 1 / nbins), col=rgb(1,0,0,1), main="omega1&omega2 histograms", xlab="Gray values")
 h2 <- hist (as.vector (below), freq=FALSE, breaks = seq (0, 1, 1 / nbins), col=rgb(0,0,1,1), add=T)
 
 probs <- calculateClassAPrioriProbabilities()
