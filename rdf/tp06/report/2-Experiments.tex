@@ -21,14 +21,13 @@ Let's take a look at how the data looks:
 \begin{lstlisting}[language=R, caption=Loading and visualising data]
 data <- load(file='simul-2017.Rdata')
 class_colors = c('red', 'green', 'blue')
-couleur <- rep('red', n_app)
+couleur_app <- rep('red', n_app)
 for (class_no in 1:3)
-  couleur[classe_app == class_no] = class_colors[class_no]
-# plot data
-plot (x_app, col=couleur, main='Training data', xlab='1st feature', ylab='2nd feature')
+  couleur_app[classe_app == class_no] = class_colors[class_no]
+plot (x_app, col=couleur_app, main='Training data', xlab='1st feature', ylab='2nd feature')
 for (class_no in 1:3)
-  couleur[classe_test == class_no] = class_colors[class_no]
-plot (x_test, col=couleur, main='Test data', xlab='1st feature', ylab='2nd feature')
+  couleur_app[classe_test == class_no] = class_colors[class_no]
+plot (x_test, col=couleur_app, main='Test data', xlab='1st feature', ylab='2nd feature')
 \end{lstlisting}
 
 \clearpage
@@ -68,9 +67,7 @@ for (class_no in 1:3){
     means[class_no, 2] <- mean (x_app[classe_app == class_no, 2])
 }
 # plot the means for train data
-for (class_no in 1:3)
-    couleur[classe_app == class_no] = class_colors[class_no]
-plot (x_app, col=couleur, main='Means for train data', xlab='First feature', ylab='Second feature')
+plot (x_app, col=couleur_app, main='Means for train data', xlab='First feature', ylab='Second feature')
 points (means, col=class_colors, p=8, cex=4)
 \end{lstlisting}
 
@@ -78,7 +75,6 @@ points (means, col=class_colors, p=8, cex=4)
     \centering
     \includegraphics[scale=0.5]{means_train.png}
     \caption{Visualising means with instances}
-    \label{}
 \end{figure}
 
 \clearpage
@@ -197,7 +193,131 @@ And that is, once again, true (variance of $\approx 5.8$ in our results), proof 
 \subsection{Analysing correlation between features}
 \paragraph{}
 Let us now note ${\Sigma}_i(j, k) = x$, a correlation between two features.
-Further analysing each possible value for $x$, we must take into account the following observations: if $x$ is positive, then if the feature $j$ increases, then so does the value for $k$.
+Before analysing the values for $x$, we must take into account the following observations: if $x$ is positive, then if the feature $j$ increases, then so does the value for $k$.
 If $x$ is negative, then if feature $j$ increases, then the value for $k$ decreases.
 If $x$ is 0, then the features are not correlated.
 We say that two features $j$ and $k$ are strongly correlated when the $x$ is large.
+
+\paragraph{}
+The covariance matrix tells us that for the train instances in the red class, there's almost no correlation, since the value is fairly low, $\approx 0.1$.
+Even for the other classes, the correlation is still $<1$, so we can conclude that the features are not highly correlated.
+
+\section{Linear discriminant analysis}
+
+\subsection{Constructing the LDA model}
+\paragraph{}
+We will now try to use \emph{LDA} to find a linear combination between $X_1$ and $X_2$.
+This algorithm will also allow us to construct \emph{boundaries} between classes.
+We'll illustrate this as a Voronoi diagram.
+
+\begin{lstlisting}[language=R, caption=Running LDA on train data]
+# construct the grid
+xp1 <- seq(min(x_app[,1]), max(x_app[,1]), length=50)
+xp2 <- seq(min(x_app[,2]), max(x_app[,2]), length=50)
+grille <- expand.grid(x1=xp1, x2=xp2)
+x_app.lda <- lda(x_app, classe_app)
+grille <- cbind(grille[,1], grille[,2])
+Zp <- predict(x_app.lda, grille)
+# plot boundaries
+zp<-Zp$post[,3]-pmax(Zp$post[,2],Zp$post[,1])
+contour(xp1,xp2,matrix(zp,50),levels=0,drawlabels=FALSE)
+zp<-Zp$post[,2]-pmax(Zp$post[,3],Zp$post[,1])
+contour(xp1,xp2,matrix(zp,50),add=TRUE,levels=0,drawlabels=FALSE)
+points(x_app, col=couleur_app, p=19)
+\end{lstlisting}
+
+\clearpage
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth - 10pt]{train_boundaries.png}
+    \caption{Decision lines on train dataset}
+\end{figure}
+
+\paragraph{}
+The classification isn't perfect.
+For example, the line on the right, separating the green instances from the red ones, could have been higher, in order to include the 3 red instances that are classified as being green by our algorithm.
+But that would raise the question of \emph{overfit}.
+So, overall, we can say that the algorithm \emph{generalizes} the data well.
+
+\subsection{Testing the linear comination}
+\paragraph{}
+Now that we have a linear combination between our features, we can see how well it behaves on our test data.
+
+\label{accuracy-calculation}
+\begin{lstlisting}[language=R, caption=Predicting with LDA]
+assigne_test<-predict(x_app.lda, newdata=x_test)
+# Estimation des taux de bonnes classifications
+table_classification_test <-table(classe_test, assigne_test$class)
+# table of correct class vs. classification
+diag(prop.table(table_classification_test, 1))
+# total percent correct
+taux_bonne_classif_test <-sum(diag(prop.table(table_classification_test)))
+\end{lstlisting}
+
+\paragraph{}
+The script above tells us that we have an overall accuracy of $88\%$: $85\%$ for the red class, $95\%$ for the green class and $\approx 86\%$ for the blue class.
+If we are to plot the test data using the same boundaries as above, it would look like so:
+
+\begin{lstlisting}[language=R, caption=Plotting predictions and true classes]
+forms <- 1:n_test
+possible_forms <- c(15, 17, 19)
+for (i in 1:n_test)
+    forms[i] = possible_forms[assigne_test$class[i]]
+# replot the grid & decision lines
+xp1 <- seq(min(x_test[,1]), max(x_test[,1]), length=50)
+xp2 <- seq(min(x_test[,2]), max(x_test[,2]), length=50)
+grille <- expand.grid(x1=xp1,x2=xp2)
+plot (grille)
+zp<-Zp$post[,3]-pmax(Zp$post[,2],Zp$post[,1])
+contour(xp1,xp2,matrix(zp,50),levels=0,drawlabels=FALSE)
+zp<-Zp$post[,2]-pmax(Zp$post[,3],Zp$post[,1])
+contour(xp1,xp2,matrix(zp,50),add=TRUE,levels=0,drawlabels=FALSE)
+points(x_test, col=couleur_test, p=forms)
+\end{lstlisting}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth - 10pt]{predictions.png}
+    \caption{Predictions using LDA}
+\end{figure}
+
+\clearpage
+
+\paragraph{}
+In the figure above, the colors represent the true class of the instances, and each shape represents one of our predictions.
+For example, missclassifications are: blue instances that are not circles, red instances that are not squares and green instances that aren't triangles.
+\paragraph{}
+Counting the missclassifications mentioned above, we find a total of $9$: $3$ red, $1$ green and $5$ blue.
+We have a number of $75$ instances in total: $20$ red, $20$ green and $35$ blue.
+That gives as a total error rate of $9/75 = 12\%$.
+For each individual class, the errors are: $3/20=15\%$, $1/20=5\%$ and $5/35\approx 14\%$.
+That is indeed what our algorithm gave us as well\ref{accuracy-calculation}.
+
+
+\section{Quadratic discriminant analysis}
+\paragraph{}
+The \emph{Quadratic Classifier} brings, as an advantage over LDA, more generality.
+It still does a linear combination of the features, a feature's value may now be raised to a certain power: $f(x) = x^T*A*x + b^Tx + c$.
+This will give us decision lines that will be more complex, since introducing terms like $x^T$ in the equation can help us achieve curves for the boundaries.
+
+\paragraph{}
+To use QDA instead of LDA, we simply replace ``lda'' with ``qda'' in the code presented above.
+Here's how the results look:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth - 10pt]{qda_train.png}
+    \caption{QDA trained on train dataset}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth - 10pt]{qda_test.png}
+    \caption{QDA trained on the test dataset}
+\end{figure}
+
+\paragraph{}
+This time, we have a total accuracy of $93\%$: $95\%$ for the red instances, $100\%$ for the green ones and $\approx 86\%$ for the blue instances.
+Quadratic discriminant analysis is more complex, but at the same time this gives more generalization power to the algorithm.
+As we can see, the results using QDA are better than those from LDA.

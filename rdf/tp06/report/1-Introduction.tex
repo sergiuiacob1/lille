@@ -6,11 +6,13 @@ Therefore, this is a way of summarizing a series of observations and experiments
 
 \section{Motivation}
 \paragraph{}
-In order to be able to work with shapes, we must first acquire them.
-Most of the time, they are not given to us in their simplest form, but found in images with all kinds of backgrounds.
-They must be extracted as precisely as possible, making sure we differentiate them from the background as accurately as we can.
+Classifying objects is a task that we must do every day. It is incredibly versatile and universally encountered: whether we should classify a thing as being healthy or not, a shape as being a circle or not, we must do it everyday.
+It is inevitable that classification tasks have made their way into Computer Science as well, in every domain.
+Having accurate ways of doing these kind of tasks is, therefore, widely needed, so we will focus on analysing some methods of doing this task.
 
 \section{Goals}
 \paragraph{}
-We'll try to apply \emph{binary segmentation} to a series of gray images.
-Our goal is to find an automatic method of doing this and identify objects and backgrounds, mainly focusing on the histograms of gray values.
+Our goal here is to analyse and classify instances from a dataset of points.
+Each point is labeled, therefore this is a supervised classification task.
+We will try to mathematically express relationship between the points' attributes (in our case, their positional values in the 2D space) that will help us conclude certain traits on the dataset.
+The conclusions will have to be as close as possible to the ground truth, so we will also be interested in ``scoring'' as well as possible with our algorithms.
