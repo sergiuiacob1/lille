@@ -115,6 +115,7 @@ Up next, we will calculate the covariance matrix.
 According to \cite{covariance}, covariance is a measure of how one feature changes in relation to another.
 Depending on the algorithm we're using, if two features are \emph{strongly} correlated, it might be better to let one go, in order to reduce the \emph{dimensionality} of the problem and make algorithms faster.
 But, for example, algorithms like Naive Bayes might actually benefit from correlated features.
+In our case, we only have $2$ features and $75$ instances, so the dimensionality of the problem doesn't really pose a problem for us.
 
 \begin{lstlisting}[language=R, caption=Calculating covariance]
 sigma <- c()
@@ -139,18 +140,20 @@ Of course, these matrixes are symmetric.
     0.95337723 & 0.09544548 \\
     0.09544548 & 3.26152120 \\
     \end{array} \right)
-    ,
+    , 
     {\Sigma}_2 = 
     \left( \begin{array}{cc}
     5.8526867 & 0.6107413 \\
     0.6107413 & 1.0474417 \\
     \end{array} \right)
     ,
+\]
+\[
     {\Sigma}_3 = 
-    \left( \begin{array}{cc}
+    (\begin{array}{cc}
     2.0251769 & 0.7214545 \\
     0.7214545 & 3.0809579 \\
-    \end{array} \right)
+    \end{array})
 \]
 
 \[ 
@@ -158,12 +161,11 @@ Of course, these matrixes are symmetric.
     \left(\begin{array}{cc}
     1 & 2 \\
     \end{array} \right)
-    ,
+    , 
     {\sigma}_2 = 
     \left( \begin{array}{cc}
     3 & 1 \\
     \end{array} \right)
-    ,
     {\sigma}_3 = 
     \left( \begin{array}{cc}
     1.5 & 2 \\
