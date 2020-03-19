@@ -6,11 +6,13 @@ Therefore, this is a way of summarizing a series of observations and experiments
 
 \section{Motivation}
 \paragraph{}
-In order to be able to work with shapes, we must first acquire them.
-Most of the time, they are not given to us in their simplest form, but found in images with all kinds of backgrounds.
-They must be extracted as precisely as possible, making sure we differentiate them from the background as accurately as we can.
+Visualising data is a critical and essential point of analysing the data.
+But we can't visualise, for example, 6D data, so it would be nice if we could \emph{reduce the dimensionality} of our problem.
+Luckily, there are multiple solutions such as Principal Component Analysis that, according to \cite{pca}, help us ``convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables''.
+We can already see advantages to this: having less variables will make visualisation possible and will also make models' training faster.
 
 \section{Goals}
 \paragraph{}
-We'll try to apply \emph{binary segmentation} to a series of gray images.
-Our goal is to find an automatic method of doing this and identify objects and backgrounds, mainly focusing on the histograms of gray values.
+Our goal will be to successfully apply methods such as PCA on a training data set in order to reduce the space of representation for some data.
+On our example, we'll work in a 2 dimensional space and we'll try to find an axis that separates our points the best.
+We'll also be interested on seeing how a classification algorithm will do if we apply this pre-processing on it.

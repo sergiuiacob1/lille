@@ -1,8 +1,4 @@
 \paragraph{}
-Bayes' theorem relieves us from having to manually search for the best threshold.
-It provided results close to what we were looking for, with low error rates.
-It can be used in a multitude of scenarios as a strong classification tool, this report presenting just one simple example.
-\paragraph{}
-However, when segmenting the digits, for example, we did rely on already existing perfect segmentations in order to calculate probabilities like $P(w)$.
-Without those, Bayes' theorem could not have been applied.
-This is, however, a step in the right direction, especially coming from a method where we were manually selecting the threshold based on the histograms of gray values.
+By using methods such as Principal Component Analysis and Factorial Discriminant Analysis, we were successfully in reducing our number of features.
+We have seen that applying this pre-processing negatively impacts our accuracy (for our case), but it also simplifies the visualisation of data.
+The most important thing is that we managed to reach our most important goal: find the most discriminant axis for our points, using each method, then projecting our points on that axis.

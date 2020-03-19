@@ -15,74 +15,60 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{2}{section*.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {2}Binarisation using Bayes' Theorem}{3}{chapter.2}% 
+\contentsline {chapter}{\numberline {2}Experiments}{3}{chapter.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.1}Loading data}{3}{section.2.1}% 
+\contentsline {section}{\numberline {2.1}Visualising the data}{3}{section.2.1}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{3}{section*.4}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{3}{section*.6}% 
+\contentsline {paragraph}{}{3}{section*.5}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{3}{section*.8}% 
+\contentsline {paragraph}{}{3}{section*.7}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.2}Technical acknowledgements}{4}{section.2.2}% 
+\contentsline {section}{\numberline {2.2}Principal Component Analysis}{4}{section.2.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.2.1}Finding the best component}{4}{subsection.2.2.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{}{4}{section*.8}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{4}{section*.9}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.3}Fixed threshold}{4}{section.2.3}% 
+\contentsline {paragraph}{}{4}{section*.11}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{4}{section*.10}% 
+\contentsline {subsection}{\numberline {2.2.2}Classifying data using PCA and LDA}{5}{subsection.2.2.2}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{5}{section*.12}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{5}{section*.14}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.4}A priori class probabilities}{5}{section.2.4}% 
+\contentsline {paragraph}{}{6}{section*.15}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{5}{section*.15}% 
+\contentsline {paragraph}{}{6}{section*.17}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{5}{section*.16}% 
+\contentsline {section}{\numberline {2.3}Factorial Discriminant Analysis}{7}{section.2.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{5}{section*.17}% 
+\contentsline {subsection}{\numberline {2.3.1}Finding the most discriminating axis}{7}{subsection.2.3.1}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.5}Conditional probabilities}{6}{section.2.5}% 
+\contentsline {paragraph}{}{7}{section*.18}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{6}{section*.18}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{6}{section*.19}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{6}{section*.20}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.6}Automatic thresholding using Bayes}{7}{section.2.6}% 
+\contentsline {paragraph}{}{7}{section*.19}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{7}{section*.21}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{7}{section*.22}% 
+\contentsline {subsection}{\numberline {2.3.2}LDA with FDA, comparison with PCA}{8}{subsection.2.3.2}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{8}{section*.23}% 
+\contentsline {paragraph}{}{8}{section*.22}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.7}Segmenting digits}{8}{section.2.7}% 
+\contentsline {paragraph}{}{8}{section*.24}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.4}Training LDA directly on the training dataset}{8}{section.2.4}% 
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{}{8}{section*.25}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{8}{section*.27}% 
+\contentsline {paragraph}{}{9}{section*.27}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{8}{section*.28}% 
+\contentsline {paragraph}{}{9}{section*.28}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{9}{section*.29}% 
+\contentsline {chapter}{\numberline {3}Conclusion}{10}{chapter.3}% 
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{9}{section*.30}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{9}{section*.31}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{11}{section*.32}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.8}Classification error}{11}{section.2.8}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{11}{section*.35}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}Conclusion}{12}{chapter.3}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{12}{section*.36}% 
-\defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{}{12}{section*.37}% 
+\contentsline {paragraph}{}{10}{section*.29}% 
